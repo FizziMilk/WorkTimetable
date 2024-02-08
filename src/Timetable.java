@@ -38,10 +38,6 @@ public class Timetable
                 System.out.println("Week successfully found");
                 weekListIndex = i;
                 break;
-            } else
-            {
-                System.out.println("Unable to find weekNumber linkage");
-                return;
             }
         }
 
@@ -95,7 +91,7 @@ public class Timetable
         int weekSize = weeks.size();
 
         // loop through the Week ArrayList and find matching weekNumber
-        for (int i = 0; i < weekSize; i++ )
+        for (int i = 0; i < weekSize; i++)
         {
             // Obtain object Week from the List
             Week selectedWeek = weeks.get(i);
@@ -105,10 +101,6 @@ public class Timetable
                 System.out.println("Week successfully found");
                 weekListIndex = i;
                 break;
-            } else
-            {
-                System.out.println("Unable to find weekNumber linkage");
-                return;
             }
         }
 

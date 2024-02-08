@@ -26,7 +26,7 @@ public class Driver
         semester1.addTimeSlotClassroom(T719);
         semester1.printTimetable(T719);
 
-                /*
+        /*
         while (true)
         {
             System.out.println("<< MAIN MENU >>");
