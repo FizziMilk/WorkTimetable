@@ -15,7 +15,7 @@ public class Driver
 
         // MAIN MENU
         System.out.println("Welcome to the Timetable Generation System!");
-        Scanner input = new Scanner(System.in);
+        InputProcessing input = new InputProcessing();
         // Test unit creation of timetable object
         Timetable semester1 = new Timetable();
         // Test unit creation of classroom object

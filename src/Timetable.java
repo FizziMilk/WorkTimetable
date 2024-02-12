@@ -15,13 +15,14 @@ public class Timetable
 
     public List<Classroom> getClassrooms() { return classrooms; }
 
+    private final DatabaseManager databaseManager = new DatabaseManager();
+    private final DAO dao = new DAO(databaseManager);
     // Print the timetable for a given classroom
     public void printTimetable(Classroom classroom)
     {
         // Ask for which week for that classroom to be printed
-        System.out.println("Which week would you like to be printed?");
-        Scanner scan = new Scanner(System.in);
-        int weekNumber = scan.nextInt();
+        InputProcessing scan = new InputProcessing();
+        int weekNumber = Integer.parseInt(scan.processUserInput("Enter the week number",true));
         int weekListIndex = 0;
 
         List<Week> weeks = classroom.getWeeks();
@@ -72,19 +73,16 @@ public class Timetable
     public void addTimeSlotClassroom(Classroom classroom)
     {
         // Ask for which week for that classroom to be printed
-        Scanner scan = new Scanner(System.in);
+        InputProcessing scan = new InputProcessing();
         int weekListIndex = 0;
-
-        System.out.println("Which week would you like to add the timeslot to?");
         int weekNumber = 0;
         try {
-            weekNumber = Integer.parseInt(scan.nextLine());
+            weekNumber = Integer.parseInt(scan.processUserInput("Which week would you like to add the timeslot to?",true));
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
 
-        System.out.println("Which day would you like to add the timeslot to? E.G. Monday or Tuesday...");
-        String dayChosen = scan.nextLine();
+        String dayChosen = scan.processUserInput("Which day would you like to add the timeslot to? E.G. Monday or Tuesday...",false);
 
 
         List<Week> weeks = classroom.getWeeks();
@@ -116,21 +114,24 @@ public class Timetable
                 // if true, the day has been selected, add the timeslot.
                 System.out.println("Day successfully found");
 
-                System.out.println("Give the start time like so: xx:xx [Minimum 09:00, maximum 18:00]");
-                String startTime = scan.nextLine();
-                System.out.println("Give the end time like so: xx:xx [Minimum 10:00, maximum 20:00]");
-                String endTime = scan.nextLine();
-                System.out.println("Who is the lecturer for this timeslot?");
-                String lecturer = scan.nextLine();
-                System.out.println("What module is this timeslot for?");
-                String module = scan.nextLine();
-                System.out.println("What is the reference for this module?");
-                String reference = scan.nextLine();
-                System.out.println("Is this timeslot a lab, workshop or lecture?");
-                String type = scan.nextLine();
+                String courseName = scan.processUserInput(("Give the name of the course"),false);
+                int courseYear = Integer.parseInt(scan.processUserInput("Give the year of the course",true));
+
+                String roomName = scan.processUserInput("What is the name of the room?",false);
+
+
+
+                String startTime = scan.processUserInput("Give the start time like so: xx:xx [Minimum 09:00, maximum 18:00]",false);
+                String endTime = scan.processUserInput("Give the end time like so: xx:xx [Minimum 10:00, maximum 20:00]",false);
+                String lecturer = scan.processUserInput("Who is the lecturer for this timeslot?",false);
+                String module = scan.processUserInput("What module is this timeslot for?",false);
+                String reference = scan.processUserInput("What is the reference for this module?",false);
+                String type = scan.processUserInput("Is this timeslot a lab, workshop or lecture?",false);
+                int capacity = Integer.parseInt(scan.processUserInput("How many students are in this class?", true));
 
                 // create the new timeslot
-                day.addTimeslot(new Timeslot(lecturer, module, reference, type, startTime, endTime));
+               // day.addTimeslot(new Timeslot(lecturer, module, reference, type, startTime, endTime));
+                dao.addTimeslot(new Timeslot(lecturer, module, reference, type, startTime, endTime),new Course(courseName,courseYear),new Classroom(roomName,type, capacity),selectedWeek,dayChosen);
                 break;
             } else
             {

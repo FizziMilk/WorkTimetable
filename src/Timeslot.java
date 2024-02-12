@@ -35,4 +35,6 @@ public class Timeslot
         return module;
     }
 
+    public String getReference(){ return reference;}
+
 }
