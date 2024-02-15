@@ -1,17 +1,13 @@
-//This class creates a new course
 public class Course {
 
     private String name;
-    private int year;
+    private String code;
 
-
-
-    public Course(String name, int year){
-        setName(name);
-        setYear(year);
+    public Course(String name, String code){
+        this.name = name;
+        this.code = code;
     }
 
-    //GET SET METHODS
     public void setName(String name){
         this.name = name;
     }
@@ -19,13 +15,11 @@ public class Course {
         return name;
     }
 
-    public void setYear(int year){
-        this.year = year;
+    public void setCode(String code){
+        this.code = code;
     }
 
-    public int getYear(){
-        return year;
+    public String getCode(){
+        return code;
     }
-
-
 }

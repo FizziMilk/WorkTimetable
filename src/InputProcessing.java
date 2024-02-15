@@ -7,7 +7,7 @@ public class InputProcessing {
     public String processUserInput(String message, boolean requireNumeric) {
         try {
             // Get user input
-            System.out.print(message);
+            System.out.println(message);
             String userInput = input.nextLine();
 
             // Check if the user wants to quit
