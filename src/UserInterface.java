@@ -23,7 +23,8 @@ public class UserInterface {
                     4. Database - Add new Module
                     5. Database - Add new Room
                     6. Database - Add new Lecturer
-                    7. Exit
+                    7. Database - Link a module to the course
+                    8. Exit
                     """);
             int week = Integer.parseInt(input.processUserInput("Put your numeric input below:", true));
             switch(week)
@@ -34,7 +35,8 @@ public class UserInterface {
                 case 4 -> input.addModule();
                 case 5 -> input.addRoom();
                 case 6 -> input.addLecturer();
-                case 7 -> loop = false;
+                case 7 -> input.addModuleToCourse();
+                case 8 -> loop = false;
                 default -> System.out.println("Enter a number --> (not 2 for now) ");
             }
         }

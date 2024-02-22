@@ -23,6 +23,10 @@ public class DAO {
             " (lecturer_name)" +
             " VALUES (?)";
 
+    private static final String INSERT_MODULE_TO_COURSE = "INSERT INTO modules_to_courses" +
+            "(courses, modules) " +
+            "VALUES (?,?)";
+
     private static final String RETRIEVE_COURSES_SQL = "SELECT * FROM courses";
     private static final String RETRIEVE_ROOMS_SQL = "SELECT * FROM rooms";
     private static final String RETRIEVE_MODULES_SQL = "SELECT * FROM modules";
@@ -145,6 +149,24 @@ public class DAO {
             System.err.println("Exception: adding lecturer to the database");
             e.printStackTrace();
         }
+    }
+
+    public void addModuleToCourse(String course, String module){
+            try(Connection conn = databaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(INSERT_MODULE_TO_COURSE)){
+                ps.setString(1,course);
+                ps.setString(2,module);
+
+                int rowsAffected = ps.executeUpdate();
+                if (rowsAffected > 0) {
+                    System.out.println("Module successfully added to course.");
+                } else {
+                    System.err.println("Failed to add module to course.");
+                }
+            }  catch (SQLException e) {
+                    System.err.println("Exception: adding module to course");
+                    e.printStackTrace();
+            }
     }
 
     public String retrieveOption(String entry) {

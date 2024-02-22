@@ -122,4 +122,15 @@ public class InputProcessing {
                 //startTime, endTime, roomName, roomType, lecturerName, moduleName, reference));
 
     }
+
+    public void addModuleToCourse(){
+        System.out.println("Linking modules to courses, dialog box created.");
+        String courseName = dao.retrieveOption("courseName");
+        int courseYear = Integer.parseInt(dao.retrieveOption("courseYear"));
+        String moduleName = dao.retrieveOption("moduleName");
+
+        courseName = courseName + "_" + courseYear;
+
+        dao.addModuleToCourse(courseName,moduleName);
+    }
 }
