@@ -1,20 +1,20 @@
 public class Timeslot {
 
     private String courseName;
-    private int year;
+    private String year;
     private int week;
     private String day;
     private String startTime;
     private String endTime;
     private String room;
     private String roomType;
-    private int roomCapacity;
+    private String roomCapacity;
     private String lecturer;
     private String module;
     private String moduleReference;
 
-    public Timeslot(String courseName, int year, int week, String day, String startTime,
-                    String endTime, String room, String roomType, int roomCapacity, String lecturer, String module, String moduleReference) {
+    public Timeslot(String courseName, String year, int week, String day, String startTime,
+                    String endTime, String room, String roomType, String roomCapacity, String lecturer, String module, String moduleReference) {
         this.courseName = courseName;
         this.year = year;
         this.week = week;
@@ -30,11 +30,11 @@ public class Timeslot {
     }
 
 
-    public int getRoomCapacity() {
+    public String getRoomCapacity() {
         return roomCapacity;
     }
 
-    public void setRoomCapacity(int roomCapacity) {
+    public void setRoomCapacity(String roomCapacity) {
         this.roomCapacity = roomCapacity;
     }
     public String getCourseName() {
@@ -45,11 +45,11 @@ public class Timeslot {
         this.courseName = courseName;
     }
 
-    public int getYear() {
+    public String getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(String year) {
         this.year = year;
     }
 

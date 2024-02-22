@@ -4,19 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1cdab7e4-0322-4a5a-9d53-c9f4f08b6889" name="Changes" comment="Changes - Added Day.java, Classroom.java, Week.java, Timetable.java, Timeslot.java and Driver.java&#10;&#10;Has all the basic functionality of the timetable generation system without database implementation, menu and conditional units.">
-      <change afterPath="$PROJECT_DIR$/src/TestDatabaseDriver.java" afterDir="false" />
+    <list default="true" id="1cdab7e4-0322-4a5a-9d53-c9f4f08b6889" name="Changes" comment="Removal of Lots of code and changes">
+      <change afterPath="$PROJECT_DIR$/src/UserInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/identifier.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/identifier.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Classroom.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Classroom.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Course.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Day.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Driver.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/InputProcessing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/InputProcessing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TestDatabaseDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/TestDatabaseDriver.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Timeslot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Timeslot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Timetable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Timetable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Week.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Timetable.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +53,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/asus/IntelliJiDEAPrograms/WorkTimetable/sqlite-jdbc-3.43.0.0.jar&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/asus/IntelliJiDEAPrograms/ECommerceSystem&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -87,7 +84,13 @@
       <workItem from="1707401433419" duration="1749000" />
       <workItem from="1708006979010" duration="397000" />
       <workItem from="1708007390691" duration="5089000" />
-      <workItem from="1708013135307" duration="1398000" />
+      <workItem from="1708013135307" duration="5349000" />
+      <workItem from="1708019278441" duration="5523000" />
+      <workItem from="1708025683097" duration="3106000" />
+      <workItem from="1708030370253" duration="1215000" />
+      <workItem from="1708031686594" duration="111000" />
+      <workItem from="1708032246892" duration="121000" />
+      <workItem from="1708439192956" duration="29000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <option name="closed" value="true" />
@@ -105,7 +108,15 @@
       <option name="project" value="LOCAL" />
       <updated>1707055099581</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Removal of Lots of code and changes">
+      <option name="closed" value="true" />
+      <created>1708014561518</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1708014561518</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -125,6 +136,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial Commit" />
     <MESSAGE value="Changes - Added Day.java, Classroom.java, Week.java, Timetable.java, Timeslot.java and Driver.java&#10;&#10;Has all the basic functionality of the timetable generation system without database implementation, menu and conditional units." />
-    <option name="LAST_COMMIT_MESSAGE" value="Changes - Added Day.java, Classroom.java, Week.java, Timetable.java, Timeslot.java and Driver.java&#10;&#10;Has all the basic functionality of the timetable generation system without database implementation, menu and conditional units." />
+    <MESSAGE value="Removal of Lots of code and changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Removal of Lots of code and changes" />
   </component>
 </project>

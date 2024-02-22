@@ -1,9 +1,15 @@
-import java.util.Scanner;
+import java.sql.*;
+import java.util.*;
+import javax.swing.*;
+
 public class InputProcessing {
     //Performs a check by using isValidInput to see if the user input was empty, and allows user to enter q to return to the menu at any time
     //if requireNumeric is set to true, will check if the input is a number
 
     private final Scanner input = new Scanner(System.in);
+    DatabaseManager databaseManager = new DatabaseManager();
+    DAO dao = new DAO(databaseManager);
+
     public String processUserInput(String message, boolean requireNumeric) {
         try {
             // Get user input
@@ -14,8 +20,8 @@ public class InputProcessing {
             if ("q".equalsIgnoreCase(userInput)) {
                 System.out.println("Leaving to menu");
 
-                // MISSING METHOD QUIT TO MENU
 
+                // replace menu
             }
 
             // Validate user input
@@ -59,5 +65,61 @@ public class InputProcessing {
             return input;
         }
         return input.substring(0, 1).toUpperCase() + input.substring(1);
+    }
+
+    // add new course intermediary
+    public void addCourse()
+    {
+        String courseName = processUserInput(("Give the name of the course"),false);
+        String courseCode = processUserInput(("Give the code of the course"),false);
+        int courseYear = Integer.parseInt(processUserInput(("Give the year of the course"),false));
+
+
+        dao.addCourseToDatabase(courseName, courseCode, courseYear);
+    }
+
+    public void addModule()
+    {
+        String moduleName = processUserInput(("Give the name of the module"),false);
+        String moduleCode = processUserInput(("Give the code of the module"),false);
+        String courseName = processUserInput(("Give the name of the course that this module is associated with"),false);
+
+        dao.addModuleToDatabase(moduleName, moduleCode, courseName);
+    }
+
+    public void addRoom()
+    {
+        String roomName = processUserInput(("Give the name of the room"),false);
+        String roomType = processUserInput(("Give the type of the room (e.g. Lab)"),false);
+        int roomCapacity = Integer.parseInt(processUserInput(("Give the capacity of the room"),false));
+
+        dao.addRoomToDatabase(roomName, roomType, roomCapacity);
+    }
+
+    public void addLecturer()
+    {
+        String lecturerName = processUserInput(("Give the name of the room"),false);
+
+        dao.addLecturerToDatabase(lecturerName);
+    }
+
+    public void addTimeslot() {
+
+
+        System.out.println("A dialogue box has opened. Look around for it!");
+        String courseName = dao.retrieveOption("courseName");
+        String courseYear = dao.retrieveOption("courseYear");
+
+        String moduleName = dao.retrieveOption("moduleName");
+        String lecturerName = dao.retrieveOption("lecturerName");
+        String roomName = dao.retrieveOption("roomName");
+        JOptionPane.showMessageDialog(null, "Go back to the console!");
+
+
+
+        // create the new timeslot
+        //dao.addTimeslot(new Timeslot(courseName, courseYear, week, day,
+                //startTime, endTime, roomName, roomType, lecturerName, moduleName, reference));
+
     }
 }
