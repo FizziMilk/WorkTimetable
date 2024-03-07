@@ -112,12 +112,33 @@ public class InputProcessing {
         String course = courseName + "_" + courseYear;
         String module = dao.retrieveOption2(course);
 
-
-
         String lecturerName = dao.retrieveOption("lecturerName");
 
         String roomName = dao.retrieveOption("roomName");
+
+        JComboBox<Integer> comboBox = new JComboBox<>();
+        for (int i = 0; i <= 12; i++){
+            comboBox.addItem(i);
+        }
+        JOptionPane.showMessageDialog(null,comboBox,"Please select the week",JOptionPane.QUESTION_MESSAGE);
+        int week = (int) comboBox.getSelectedItem();
+
+        JOptionPane.showMessageDialog(null, "The selected week is : " + week);
+
+        JComboBox<String> comboBox2 = new JComboBox<>();
+        comboBox2.addItem("Monday");
+        comboBox2.addItem("Tuesday");
+        comboBox2.addItem("Wednesday");
+        comboBox2.addItem("Thursday");
+        comboBox2.addItem("Friday");
+
+        JOptionPane.showMessageDialog(null,comboBox2,"Please select the day",JOptionPane.QUESTION_MESSAGE);
+        String day = (String) comboBox2.getSelectedItem();
+
+        JOptionPane.showMessageDialog(null,"The selected day is " + day);
+
         JOptionPane.showMessageDialog(null, "Go back to the console!");
+
 
 
 
@@ -136,4 +157,5 @@ public class InputProcessing {
 
         dao.addModuleToCourse(courseName,moduleName);
     }
+
 }
