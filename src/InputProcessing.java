@@ -82,8 +82,7 @@ public class InputProcessing {
     {
         String moduleName = processUserInput(("Give the name of the module"),false);
         String moduleCode = processUserInput(("Give the code of the module"),false);
-        String courseName = processUserInput(("Give the name of the course that this module is associated with"),false);
-
+        String courseName = dao.retrieveOption("courseName");
         dao.addModuleToDatabase(moduleName, moduleCode, courseName);
     }
 
