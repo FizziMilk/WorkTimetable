@@ -20,7 +20,7 @@ public class DAO {
             " VALUES (?,?,?)";
     private static final String INSERT_MODULE_SQL = "INSERT INTO modules" +
             " (module_name, module_code)" +
-            " VALUES (?,?,?)";
+            " VALUES (?,?)";
     private static final String INSERT_LECTURER_SQL = "INSERT INTO lecturers" +
             " (lecturer_name)" +
             " VALUES (?)";
@@ -118,18 +118,25 @@ public class DAO {
 
     public void addModuleToDatabase(String moduleName, String moduleCode, String courseName) {
         try (Connection conn = databaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(INSERT_MODULE_SQL)) {
+             PreparedStatement ps = conn.prepareStatement(INSERT_MODULE_SQL);
+             PreparedStatement ps2 = conn.prepareStatement(INSERT_MODULE_TO_COURSE)) {
+
             ps.setString(1, moduleName);
             ps.setString(2, moduleCode);
-            ps.setString(3, courseName);
 
+            //Adds the module to modules_to_courses database
+            ps2.setString(1, courseName);
+            ps2.setString(2,moduleName);
             // executeUpdate returns 1 if successful
             int rowsAffected = ps.executeUpdate();
-            if (rowsAffected > 0) {
+            int rowsAffected2 = ps2.executeUpdate();
+            if (rowsAffected > 0 || rowsAffected2 > 0 ) {
                 System.out.println("Module added successfully.");
             } else {
                 System.err.println("Failed to add module to the database.");
             }
+
+
         } catch (SQLException e) {
             System.err.println("Exception: adding module to the database");
             e.printStackTrace();
@@ -173,6 +180,7 @@ public class DAO {
     }
 
     public String retrieveOption(String entry) {
+        System.out.println("A dialog box has appeared, look around for it.");
         String x = null;
         String msg = "";
         int selectedColumn = 1;
