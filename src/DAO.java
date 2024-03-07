@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DAO {
     private static final String INSERT_ITEM_SQL = "INSERT INTO timeslots" +
@@ -32,6 +34,7 @@ public class DAO {
     private static final String RETRIEVE_MODULES_SQL = "SELECT * FROM modules";
     private static final String RETRIEVE_LECTURERS_SQL = "SELECT * FROM lecturers";
 
+    private static final String QUERY_MODULES_FROM_COURSES = "SELECT * FROM modules_to_courses WHERE courses = ?";
     private static final String QUERY_COURSES = "SELECT * FROM courses WHERE course_name = ? AND course_year = ?";
     private static final String QUERY_MODULES = "SELECT * FROM modules WHERE module_name = ?";
     private static final String QUERY_ROOMS = "SELECT * FROM rooms WHERE room_name = ?";
@@ -172,7 +175,7 @@ public class DAO {
     public String retrieveOption(String entry) {
         String x = null;
         String msg = "";
-        int v = 1;
+        int selectedColumn = 1;
         switch (entry) {
             case "courseName":
                 msg = "Select the course";
@@ -181,7 +184,7 @@ public class DAO {
             case "courseYear":
                 msg = "Select the year of the course";
                 x = RETRIEVE_COURSES_SQL;
-                v = 3;
+                selectedColumn = 3;
                 break;
             case "moduleName":
                 msg = "Select the module for this timeslot";
@@ -198,13 +201,17 @@ public class DAO {
             default: System.out.println("Error in Retrieve() method");
         }
 
+        Set<String> options = new HashSet<>();
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(x)) {
             try (ResultSet rs = ps.executeQuery()) {
                 JComboBox<String> comboBox = new JComboBox<>();
                 while (rs.next()) {
-                    String option = rs.getString(v);
-                    comboBox.addItem(option);
+                    String option = rs.getString(selectedColumn);
+                    options.add(option);
+                }
+                for (String optionInSet : options) {
+                    comboBox.addItem(optionInSet);
                 }
                 JOptionPane.showMessageDialog(null, comboBox, msg, JOptionPane.QUESTION_MESSAGE);
                 String selectedOption = (String) comboBox.getSelectedItem();
@@ -218,8 +225,33 @@ public class DAO {
         return null;
     }
 
+    // retrieve method, make checks for: what course was selected
+    // private static final String QUERY_MODULES_FROM_COURSES = "SELECT * FROM modules_to_courses WHERE courses = ?";
+    public String retrieveOption2(String course) {
 
+        String msg = "Which module from this course and year?";
+        System.out.println(course);
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(QUERY_MODULES_FROM_COURSES)) {
+            ps.setString(1, course);
+            try (ResultSet rs = ps.executeQuery()) {
+                JComboBox<String> comboBox = new JComboBox<>();
+                while (rs.next()) {
+                    String option = rs.getString(2);
+                    System.out.println(rs.getString(2));
+                    comboBox.addItem(option);
+                }
+                JOptionPane.showMessageDialog(null, comboBox, msg, JOptionPane.QUESTION_MESSAGE);
+                String selectedOption = (String) comboBox.getSelectedItem();
+                return selectedOption;
 
+            }
+        } catch (SQLException e) {
+            System.err.println("Exception: retrieving method from courses, from database");
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
 
 

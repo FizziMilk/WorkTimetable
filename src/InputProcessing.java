@@ -110,8 +110,13 @@ public class InputProcessing {
         String courseName = dao.retrieveOption("courseName");
         String courseYear = dao.retrieveOption("courseYear");
 
-        String moduleName = dao.retrieveOption("moduleName");
+        String course = courseName + "_" + courseYear;
+        String module = dao.retrieveOption2(course);
+
+
+
         String lecturerName = dao.retrieveOption("lecturerName");
+
         String roomName = dao.retrieveOption("roomName");
         JOptionPane.showMessageDialog(null, "Go back to the console!");
 
@@ -120,7 +125,6 @@ public class InputProcessing {
         // create the new timeslot
         //dao.addTimeslot(new Timeslot(courseName, courseYear, week, day,
                 //startTime, endTime, roomName, roomType, lecturerName, moduleName, reference));
-
     }
 
     public void addModuleToCourse(){
