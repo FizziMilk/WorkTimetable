@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1cdab7e4-0322-4a5a-9d53-c9f4f08b6889" name="Changes" comment="Removal of Lots of code and changes">
+    <list default="true" id="1cdab7e4-0322-4a5a-9d53-c9f4f08b6889" name="Changes" comment="Addition of retrieveoption2, modifications to database table, and more debugs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/identifier.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/identifier.sqlite" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO.java" afterDir="false" />
@@ -86,7 +86,11 @@
       <workItem from="1708031686594" duration="111000" />
       <workItem from="1708032246892" duration="121000" />
       <workItem from="1708439192956" duration="29000" />
-      <workItem from="1709820831177" duration="3556000" />
+      <workItem from="1709820831177" duration="5786000" />
+      <workItem from="1710253756313" duration="17000" />
+      <workItem from="1710261209008" duration="796000" />
+      <workItem from="1710262376691" duration="6000" />
+      <workItem from="1710425229035" duration="1929000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <option name="closed" value="true" />
@@ -112,7 +116,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708014561518</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Addition of retrieveoption2, modifications to database table, and more debugs">
+      <option name="closed" value="true" />
+      <created>1709824540049</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1709824540049</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -133,6 +145,7 @@
     <MESSAGE value="Initial Commit" />
     <MESSAGE value="Changes - Added Day.java, Classroom.java, Week.java, Timetable.java, Timeslot.java and Driver.java&#10;&#10;Has all the basic functionality of the timetable generation system without database implementation, menu and conditional units." />
     <MESSAGE value="Removal of Lots of code and changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removal of Lots of code and changes" />
+    <MESSAGE value="Addition of retrieveoption2, modifications to database table, and more debugs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Addition of retrieveoption2, modifications to database table, and more debugs" />
   </component>
 </project>

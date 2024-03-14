@@ -25,18 +25,18 @@ public class InputProcessing {
             }
 
             // Validate user input
-            if (isValidInput(userInput,requireNumeric)) {
+            if (isValidInput(userInput, requireNumeric)) {
                 // Process or store the valid input
                 return capitalizeFirstLetter(userInput.toLowerCase());
             } else {
                 // Handle invalid input
                 System.out.println("Invalid input. Please try again. Or enter q to quit.\n");
-                return processUserInput(message,requireNumeric);
+                return processUserInput(message, requireNumeric);
             }
         } catch (Exception e) {
             // Handle unexpected exceptions
             System.out.println("An error occurred. Please try again. Or enter q to quit.\n");
-            return processUserInput(message,requireNumeric);
+            return processUserInput(message, requireNumeric);
         }
     }
 
@@ -60,6 +60,7 @@ public class InputProcessing {
 
         return true; // Input is a non-empty string
     }
+
     private String capitalizeFirstLetter(String input) {
         if (input == null || input.isEmpty()) {
             return input;
@@ -68,36 +69,32 @@ public class InputProcessing {
     }
 
     // add new course intermediary
-    public void addCourse()
-    {
-        String courseName = processUserInput(("Give the name of the course"),false);
-        String courseCode = processUserInput(("Give the code of the course"),false);
-        int courseYear = Integer.parseInt(processUserInput(("Give the year of the course"),false));
+    public void addCourse() {
+        String courseName = processUserInput(("Give the name of the course"), false);
+        String courseCode = processUserInput(("Give the code of the course"), false);
+        int courseYear = Integer.parseInt(processUserInput(("Give the year of the course"), false));
 
 
         dao.addCourseToDatabase(courseName, courseCode, courseYear);
     }
 
-    public void addModule()
-    {
-        String moduleName = processUserInput(("Give the name of the module"),false);
-        String moduleCode = processUserInput(("Give the code of the module"),false);
+    public void addModule() {
+        String moduleName = processUserInput(("Give the name of the module"), false);
+        String moduleCode = processUserInput(("Give the code of the module"), false);
         String courseName = dao.retrieveOption("courseName");
         dao.addModuleToDatabase(moduleName, moduleCode, courseName);
     }
 
-    public void addRoom()
-    {
-        String roomName = processUserInput(("Give the name of the room"),false);
-        String roomType = processUserInput(("Give the type of the room (e.g. Lab)"),false);
-        int roomCapacity = Integer.parseInt(processUserInput(("Give the capacity of the room"),false));
+    public void addRoom() {
+        String roomName = processUserInput(("Give the name of the room"), false);
+        String roomType = processUserInput(("Give the type of the room (e.g. Lab)"), false);
+        int roomCapacity = Integer.parseInt(processUserInput(("Give the capacity of the room"), false));
 
         dao.addRoomToDatabase(roomName, roomType, roomCapacity);
     }
 
-    public void addLecturer()
-    {
-        String lecturerName = processUserInput(("Give the name of the room"),false);
+    public void addLecturer() {
+        String lecturerName = processUserInput(("Give the name of the room"), false);
 
         dao.addLecturerToDatabase(lecturerName);
     }
@@ -111,22 +108,27 @@ public class InputProcessing {
 
         String course = courseName + "_" + courseYear;
         String module = dao.retrieveOption2(course);
-
-
-
         String lecturerName = dao.retrieveOption("lecturerName");
-
         String roomName = dao.retrieveOption("roomName");
-        JOptionPane.showMessageDialog(null, "Go back to the console!");
+        String roomType = dao.retrieveRoomType(roomName);
 
+        System.out.println(roomType);
+
+        // now choose week
+        // now choose day
+
+        // then finally choose time after filtering the options from the chosen lecturer and room, depending on week/day
+
+
+        JOptionPane.showMessageDialog(null, "Go back to the console!");
 
 
         // create the new timeslot
         //dao.addTimeslot(new Timeslot(courseName, courseYear, week, day,
-                //startTime, endTime, roomName, roomType, lecturerName, moduleName, reference));
+        //startTime, endTime, roomName, roomType, lecturerName, moduleName));
     }
 
-    public void addModuleToCourse(){
+    public void addModuleToCourse() {
         System.out.println("Linking modules to courses, dialog box created.");
         String courseName = dao.retrieveOption("courseName");
         int courseYear = Integer.parseInt(dao.retrieveOption("courseYear"));
@@ -134,6 +136,6 @@ public class InputProcessing {
 
         courseName = courseName + "_" + courseYear;
 
-        dao.addModuleToCourse(courseName,moduleName);
+        dao.addModuleToCourse(courseName, moduleName);
     }
 }

@@ -260,6 +260,24 @@ public class DAO {
         }
         return null;
     }
+
+    public String retrieveRoomType(String roomName) {
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(QUERY_ROOMS)) {
+            ps.setString(1, roomName);
+            try (ResultSet rs = ps.executeQuery()) {
+                String roomType = null;
+                while (rs.next()) {
+                    roomType = rs.getString(2);
+                }
+                return roomType;
+            }
+        } catch (SQLException e) {
+            System.err.println("Exception: retrieving room_type from room");
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
 
 
