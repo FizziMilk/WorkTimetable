@@ -255,7 +255,7 @@ public class DAO {
 
             }
         } catch (SQLException e) {
-            System.err.println("Exception: retrieving method from courses, from database");
+            System.err.println("Exception: retrieving module from courses, from database");
             e.printStackTrace();
         }
         return null;
