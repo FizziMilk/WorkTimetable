@@ -1,5 +1,7 @@
 public class Timeslot {
 
+
+
     private String courseName;
     private String year;
     private int week;
@@ -124,4 +126,11 @@ public class Timeslot {
     public void setModuleReference(String moduleReference) {
         this.moduleReference = moduleReference;
     }
+
+
+
+
+
 }
+
+

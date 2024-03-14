@@ -1,4 +1,6 @@
 import java.sql.*;
+import java.time.Duration;
+import java.time.LocalTime;
 import java.util.*;
 import javax.swing.*;
 public class InputProcessing {
@@ -7,6 +9,11 @@ public class InputProcessing {
     private final Scanner input = new Scanner(System.in);
     DatabaseManager databaseManager = new DatabaseManager();
     DAO dao = new DAO(databaseManager);
+
+    String[] timesArray = {"09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+            "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30",
+            "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00"};
+
     public String processUserInput(String message, boolean requireNumeric) {
         try {
             // Get user input
@@ -143,5 +150,65 @@ public class InputProcessing {
 
         return day;
     }
+
+    public Duration calculateDuration(String startTimeString, String endTimeString) {
+        startTimeString = "09:00";
+        endTimeString = "10:30";
+
+        Duration duration = calculateDuration(startTimeString, endTimeString);
+        System.out.println("Duration: " + duration);
+        // Parse strings to LocalTime objects
+        LocalTime startTime = LocalTime.parse(startTimeString);
+        LocalTime endTime = LocalTime.parse(endTimeString);
+
+        // Calculate duration between start and end times
+        duration = Duration.between(startTime, endTime);
+
+        //Put this into where you'll use the timeslot duration
+        // long hours = duration.toHours();
+        // long minutes = duration.toMinutes() % 60;
+        // System.out.println("Hours: " + hours + ", Minutes: " + minutes);
+
+        return duration;
+    }
+
+    public String selectStartTime() {
+
+        String msg = "Please select a start time for this class.";
+
+        JComboBox<String> comboBox = new JComboBox<>();
+        //-3 to exclude the 19:30 and 20:00 timeslots
+        for(int i = 0; i <= timesArray.length - 3; i++){
+            comboBox.addItem(timesArray[i]);
+        }
+        JOptionPane.showMessageDialog(null,comboBox,msg,JOptionPane.QUESTION_MESSAGE);
+        String startTime = (String) comboBox.getSelectedItem();
+        return startTime;
+    }
+
+
+    public String selectEndTime(){
+
+        String msg = "Please select an end time for this class.";
+        int startTimeIndex = 0;
+        String startTime = selectStartTime();
+
+        for(int i = 0; i <= timesArray.length - 1; i++){
+            if(Objects.equals(timesArray[i], startTime)){
+                startTimeIndex = i;
+            }
+        }
+        JComboBox<String> comboBox = new JComboBox<>();
+        for(int i = startTimeIndex; i <= timesArray.length - 1; i++){
+            comboBox.addItem(timesArray[i]);
+        }
+        JOptionPane.showMessageDialog(null,comboBox,msg,JOptionPane.QUESTION_MESSAGE);
+        String endTime = (String) comboBox.getSelectedItem();
+
+        return endTime;
+    }
+
+
+
 
 }
