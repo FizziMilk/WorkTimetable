@@ -10,8 +10,8 @@ import java.util.Set;
 
 public class DAO {
     private static final String INSERT_ITEM_SQL = "INSERT INTO timeslots" +
-            " (course_name,year,week,day,start_time,end_time,room, room_type, lecturer, module, module_reference)" +
-            " VALUES (?,?, ?, ?, ?, ? , ?, ?, ?, ?, ?)";
+            " (course_name,year,week,day,start_time,end_time,room, room_type, lecturer, module, module_reference,room_capacity)" +
+            " VALUES (?,?, ?, ?, ?, ? , ?, ?, ?, ?, ?, ?)";
     private static final String INSERT_COURSE_SQL = "INSERT INTO courses" +
             " (course_name, course_code, course_year)" +
             " VALUES (?,?,?)";
@@ -38,7 +38,8 @@ public class DAO {
     private static final String QUERY_COURSES = "SELECT * FROM courses WHERE course_name = ? AND course_year = ?";
     private static final String QUERY_MODULES = "SELECT * FROM modules WHERE module_name = ?";
     private static final String QUERY_ROOMS = "SELECT * FROM rooms WHERE room_name = ?";
-
+    private static final String QUERY_MODULECODE_SQL = "SELECT * FROM modules WHERE module_name = ?";
+    String query = "SELECT * FROM timeslots WHERE Week = ? AND Day = ?";
 
     private final DatabaseManager databaseManager;
 
@@ -61,6 +62,7 @@ public class DAO {
             ps.setString(9, timeslot.getLecturer());
             ps.setString(10, timeslot.getModule());
             ps.setString(11, timeslot.getModuleReference());
+            ps.setString(12,timeslot.getRoomCapacity());
 
             // executeUpdate returns 1 if successful
             int rowsAffected = ps.executeUpdate();
@@ -74,6 +76,36 @@ public class DAO {
             System.err.println("Exception: adding timeslot to the database");
             e.printStackTrace();
         }
+    }
+    public boolean clashCheck(int week, String day, String lecturerName, String newStartTime, String newEndTime) throws SQLException {
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            // Set the week and day parameters in the prepared statement
+            pstmt.setInt(1, week);
+            pstmt.setString(2, day);
+
+            // Execute the query
+            try(ResultSet rs = pstmt.executeQuery();) {
+
+                // Iterate over the existing timeslots
+                while (rs.next()) {
+                    String startTime = rs.getString("start_time");
+                    String endTime = rs.getString("end_time");
+                    String existingLecturerName = rs.getString("lecturer");
+
+                    // Check for clashes
+                    if (lecturerName.equals(existingLecturerName)) {
+                        if (newStartTime.compareTo(endTime) < 0 && newEndTime.compareTo(startTime) > 0) {
+                            System.out.println("Clash detected! Cannot create the new timeslot.");
+                            return true;
+                        }
+                    }
+                }
+            }
+        }catch(SQLException e){
+            System.out.println(e);
+        }return false;
     }
 
     public void addCourseToDatabase(String courseName, String courseCode, int courseYear) {
@@ -180,7 +212,6 @@ public class DAO {
     }
 
     public String retrieveOption(String entry) {
-        System.out.println("A dialog box has appeared, look around for it.");
         String x = null;
         String msg = "";
         int selectedColumn = 1;
@@ -261,19 +292,37 @@ public class DAO {
         return null;
     }
 
-    public String retrieveRoomType(String roomName) {
+    public String[] retrieveRoomType(String roomName) {
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(QUERY_ROOMS)) {
             ps.setString(1, roomName);
             try (ResultSet rs = ps.executeQuery()) {
-                String roomType = null;
+                String[] roomInfo = new String[2];
                 while (rs.next()) {
-                    roomType = rs.getString(2);
+                    roomInfo[0] = rs.getString(2);
+                    roomInfo[1] = rs.getString(3);
                 }
-                return roomType;
+                return roomInfo;
             }
         } catch (SQLException e) {
             System.err.println("Exception: retrieving room_type from room");
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public String retrieveModuleReference(String module) {
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(QUERY_MODULECODE_SQL)) {
+            ps.setString(1, module);
+            try (ResultSet rs = ps.executeQuery()) {
+                String moduleCode = null;
+                while (rs.next()) {
+                    moduleCode = rs.getString(2);
+                }
+                return moduleCode;
+            }
+        } catch (SQLException e) {
+            System.err.println("Exception: retrieving moduleCode from modules");
             e.printStackTrace();
         }
         return null;

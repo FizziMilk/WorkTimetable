@@ -16,7 +16,7 @@ public class Timeslot {
     private String moduleReference;
 
     public Timeslot(String courseName, String year, int week, String day, String startTime,
-                    String endTime, String room, String roomType, String roomCapacity, String lecturer, String module, String moduleReference) {
+                    String endTime, String room, String roomType,String lecturer, String module, String moduleReference,String roomCapacity) {
         this.courseName = courseName;
         this.year = year;
         this.week = week;

@@ -10,6 +10,8 @@ public class InputProcessing {
     DatabaseManager databaseManager = new DatabaseManager();
     DAO dao = new DAO(databaseManager);
 
+
+
     String[] timesArray = {"09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
             "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30",
             "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00"};
@@ -89,7 +91,7 @@ public class InputProcessing {
         String lecturerName = processUserInput(("Give the name of the room"),false);
         dao.addLecturerToDatabase(lecturerName);
     }
-    public void addTimeslot() {
+    public void addTimeslot() throws SQLException {
         System.out.println("A dialogue box has opened. Look around for it!");
         String courseName = dao.retrieveOption("courseName");
         String courseYear = dao.retrieveOption("courseYear");
@@ -98,16 +100,38 @@ public class InputProcessing {
         String lecturerName = dao.retrieveOption("lecturerName");
         String roomName = dao.retrieveOption("roomName");
 
-        String roomType = dao.retrieveRoomType(roomName);
+        String[] roomInfo = dao.retrieveRoomType(roomName);
 
         int week = weekSelection();
         String day = daySelection();
+        String[] arrayTime = selectTime();
+        String reference = dao.retrieveModuleReference(moduleName);
 
+        LocalTime start = LocalTime.parse(arrayTime[0]);
+        LocalTime end = LocalTime.parse(arrayTime[1]);
+        Duration duration = Duration.between(start,end);
+
+        String startTime = arrayTime[0];
+        String endTime = arrayTime[1];
+
+        if(dao.clashCheck(week,day,lecturerName,startTime, endTime)){
+            return;
+        }
+
+
+        if(duration.toMinutes() > Duration.ofHours(3).toMinutes()) {
+            System.out.println("Duration is larger than 3 hours");
+            return;
+        }
+        if(duration.toMinutes() < Duration.ofHours(1).toMinutes()){
+            System.out.println("Duration is less than 1 hours");
+            return;
+        }
 
 
         // create the new timeslot
-       // dao.addTimeslot(new Timeslot(courseName, courseYear, week, day,
-        //startTime, endTime, roomName, roomType, lecturerName, moduleName, reference));
+        dao.addTimeslot(new Timeslot(courseName, courseYear, week, day,
+        arrayTime[0], arrayTime[1], roomName, roomInfo[0], lecturerName, moduleName, reference,roomInfo[1]));
     }
     public void addModuleToCourse(){
         System.out.println("Linking modules to courses, dialog box created.");
@@ -127,8 +151,6 @@ public class InputProcessing {
         JOptionPane.showMessageDialog(null,comboBox,"Please select the week",JOptionPane.QUESTION_MESSAGE);
         int week = (int) comboBox.getSelectedItem();
 
-        JOptionPane.showMessageDialog(null, "The selected week is : " + week);
-
         return week;
     }
     public String daySelection(){
@@ -144,71 +166,49 @@ public class InputProcessing {
         JOptionPane.showMessageDialog(null,comboBox2,"Please select the day",JOptionPane.QUESTION_MESSAGE);
         String day = (String) comboBox2.getSelectedItem();
 
-        JOptionPane.showMessageDialog(null,"The selected day is " + day);
-
-        JOptionPane.showMessageDialog(null, "Go back to the console!");
 
         return day;
     }
 
-    public Duration calculateDuration(String startTimeString, String endTimeString) {
-        startTimeString = "09:00";
-        endTimeString = "10:30";
+           public String selectTimeHelper () {
 
-        Duration duration = calculateDuration(startTimeString, endTimeString);
-        System.out.println("Duration: " + duration);
-        // Parse strings to LocalTime objects
-        LocalTime startTime = LocalTime.parse(startTimeString);
-        LocalTime endTime = LocalTime.parse(endTimeString);
+            String msg = "Please select a start time for this class.";
 
-        // Calculate duration between start and end times
-        duration = Duration.between(startTime, endTime);
-
-        //Put this into where you'll use the timeslot duration
-        // long hours = duration.toHours();
-        // long minutes = duration.toMinutes() % 60;
-        // System.out.println("Hours: " + hours + ", Minutes: " + minutes);
-
-        return duration;
-    }
-
-    public String selectStartTime() {
-
-        String msg = "Please select a start time for this class.";
-
-        JComboBox<String> comboBox = new JComboBox<>();
-        //-3 to exclude the 19:30 and 20:00 timeslots
-        for(int i = 0; i <= timesArray.length - 3; i++){
-            comboBox.addItem(timesArray[i]);
-        }
-        JOptionPane.showMessageDialog(null,comboBox,msg,JOptionPane.QUESTION_MESSAGE);
-        String startTime = (String) comboBox.getSelectedItem();
-        return startTime;
-    }
-
-
-    public String selectEndTime(){
-
-        String msg = "Please select an end time for this class.";
-        int startTimeIndex = 0;
-        String startTime = selectStartTime();
-
-        for(int i = 0; i <= timesArray.length - 1; i++){
-            if(Objects.equals(timesArray[i], startTime)){
-                startTimeIndex = i;
+            JComboBox<String> comboBox = new JComboBox<>();
+            //-3 to exclude the 19:30 and 20:00 timeslots
+            for (int i = 0; i <= timesArray.length - 3; i++) {
+                comboBox.addItem(timesArray[i]);
             }
+            JOptionPane.showMessageDialog(null, comboBox, msg, JOptionPane.QUESTION_MESSAGE);
+            String startTime = (String) comboBox.getSelectedItem();
+            return startTime;
         }
-        JComboBox<String> comboBox = new JComboBox<>();
-        for(int i = startTimeIndex; i <= timesArray.length - 1; i++){
-            comboBox.addItem(timesArray[i]);
-        }
-        JOptionPane.showMessageDialog(null,comboBox,msg,JOptionPane.QUESTION_MESSAGE);
-        String endTime = (String) comboBox.getSelectedItem();
 
-        return endTime;
+
+        public String[] selectTime () {
+
+            String msg = "Please select an end time for this class.";
+            int startTimeIndex = 0;
+            String startTime = selectTimeHelper();
+
+            for (int i = 0; i <= timesArray.length - 1; i++) {
+                if (Objects.equals(timesArray[i], startTime)) {
+                    startTimeIndex = i;
+                }
+            }
+            JComboBox<String> comboBox = new JComboBox<>();
+            //+2 to disallow timeslots being less than 1 hour
+            for (int i = startTimeIndex + 2; i <= timesArray.length - 1; i++) {
+                comboBox.addItem(timesArray[i]);
+            }
+            JOptionPane.showMessageDialog(null, comboBox, msg, JOptionPane.QUESTION_MESSAGE);
+            String endTime = (String) comboBox.getSelectedItem();
+            String[] arrayTime = new String[2];
+            arrayTime[0] = startTime;
+            arrayTime[1] = endTime;
+
+            return arrayTime;
+        }
+
+
     }
-
-
-
-
-}

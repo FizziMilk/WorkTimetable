@@ -4,7 +4,7 @@ public class UserInterface {
 
     InputProcessing input = new InputProcessing();
 
-    public void menu(){
+    public void menu() throws SQLException {
         System.out.println("**********************************************" +
                 "\nWelcome to the Timetable Generation System.\n" +
                 "**********************************************\n");
