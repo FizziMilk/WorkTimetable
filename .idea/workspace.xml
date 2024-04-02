@@ -5,13 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1cdab7e4-0322-4a5a-9d53-c9f4f08b6889" name="Changes" comment="Created selectStartTime and selectEndTime methods">
+      <change afterPath="$PROJECT_DIR$/src/Display.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/identifier.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/identifier.sqlite" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/InputProcessing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/InputProcessing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/TestDatabaseDriver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/TestDatabaseDriver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Timeslot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Timeslot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TestDatabaseDriver.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UserInterface.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +65,8 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/asus/IntelliJiDEAPrograms/ECommerceSystem&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;21&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/asus/Downloads/openjfx-21.0.2_windows-x64_bin-sdk/javafx-sdk-21.0.2/lib/javafx.web.jar&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -77,6 +78,16 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RunManager">
+    <configuration name="Display" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Display" />
+      <module name="WorkTimetable" />
+      <option name="VM_PARAMETERS" value="--module-path C:\Users\asus\Downloads\openjfx-21.0.2_windows-x64_bin-sdk\javafx-sdk-21.0.2\lib --add-modules javafx.controls,javafx.fxml " />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -112,6 +123,13 @@
       <workItem from="1710431807731" duration="1251000" />
       <workItem from="1710615364820" duration="10000" />
       <workItem from="1710675456893" duration="6414000" />
+      <workItem from="1711029098545" duration="3201000" />
+      <workItem from="1711032806961" duration="3192000" />
+      <workItem from="1711036765204" duration="6055000" />
+      <workItem from="1711462710563" duration="6124000" />
+      <workItem from="1711469553729" duration="7831000" />
+      <workItem from="1711566915634" duration="54000" />
+      <workItem from="1712060521964" duration="337000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <option name="closed" value="true" />

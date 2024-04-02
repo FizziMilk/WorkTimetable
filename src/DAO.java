@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,6 +40,8 @@ public class DAO {
     private static final String QUERY_MODULES = "SELECT * FROM modules WHERE module_name = ?";
     private static final String QUERY_ROOMS = "SELECT * FROM rooms WHERE room_name = ?";
     private static final String QUERY_MODULECODE_SQL = "SELECT * FROM modules WHERE module_name = ?";
+    private static final String QUERY_TIMESLOTS = "SELECT * FROM timeslots WHERE course_name = ? AND year = ? AND week = ?";
+
     String query = "SELECT * FROM timeslots WHERE Week = ? AND Day = ?";
 
     private final DatabaseManager databaseManager;
@@ -326,6 +329,45 @@ public class DAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    // co
+
+    public ArrayList<String>[] retrieveTimeslots(String courseName, int courseYear, int week) {
+
+        ArrayList<String>[] array = new ArrayList[3];
+        ArrayList<String> startTimes = new ArrayList<>();
+        ArrayList<String> endTimes = new ArrayList<>();
+        ArrayList<String> values = new ArrayList<>();
+
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(QUERY_TIMESLOTS)) {
+            ps.setString(1, courseName);
+            ps.setInt(2, courseYear);
+            ps.setInt(3, week);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    startTimes.add(rs.getString(5));
+                    endTimes.add(rs.getString(6));
+                    values.add(rs.getString(4)); // index 0, 3, 6... -> day
+                    values.add(rs.getString(7)); // index 1, 4, 7... -> roomName
+                    values.add(rs.getString(10));// index 2, 5, 8... -> moduleName
+                }
+
+                array[0] = startTimes;
+                array[1] = endTimes;
+                array[2] = values;
+                // if ur quesitoning if this work, ye it does cuz i system printed the values to check
+
+                return array;
+            }
+        } catch (SQLException e) {
+            System.err.println("Exception: retrieving room_type from room");
+            e.printStackTrace();
+        }
+        return null;
+
     }
 }
 

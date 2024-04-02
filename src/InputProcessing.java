@@ -1,16 +1,19 @@
+import javafx.application.Application;
+
 import java.sql.*;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
 import javax.swing.*;
+
+
 public class InputProcessing {
     //Performs a check by using isValidInput to see if the user input was empty, and allows user to enter q to return to the menu at any time
     //if requireNumeric is set to true, will check if the input is a number
     private final Scanner input = new Scanner(System.in);
     DatabaseManager databaseManager = new DatabaseManager();
     DAO dao = new DAO(databaseManager);
-
-
+    Display display = new Display();
 
     String[] timesArray = {"09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
             "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30",
