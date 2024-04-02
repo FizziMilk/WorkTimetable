@@ -1,10 +1,9 @@
-import javafx.application.Application;
-
-import java.sql.*;
+import javax.swing.*;
+import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalTime;
-import java.util.*;
-import javax.swing.*;
+import java.util.Objects;
+import java.util.Scanner;
 
 
 public class InputProcessing {

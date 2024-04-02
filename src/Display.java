@@ -97,26 +97,35 @@ public class Display extends Application {
 
         // retrieve arrayList that contains two ArrayLists-> [0] is startTimes, [1] is endTimes, [2] is values
         ArrayList<String>[] arrayTimes = dao.retrieveTimeslots(courseName, courseYear, week);
-        HashMap<String, Timeslot> hourTimeSlots = new HashMap<>();
 
         List<Timeslot> timeslots = new ArrayList<>();
 
 
         // Iterate over the hours and minutes to create empty timeslots
-        // Integer wrapper class so pass-by-reference can be used
-        Integer dayIndex = 1;
+        int min = 0;
+        int index = 0;
+        int indexB = 0;
+        boolean isFinished;
 
-        outerLoop:
         for (int hour = 9; hour <= 20; hour++) {
-            for (int min = 0; min < 60; min += 30) {
-                if (dayIndex > 5)
-                    break outerLoop;
-                else {
-                    String time = String.format("%02d:%02d", hour, min);
-                    Timeslot timeslot = new Timeslot(time);
-                    dayIndex = addTimeSlot(hour, min, arrayTimes, timeslots, dayIndex, 0, 0);
-                }
+            if (index >= arrayTimes[2].size()) {
+                break; // Exit the loop if we have processed all timeslots
             }
+
+            String dayChosen = arrayTimes[2].get(index); // get the day
+
+            min = 0;
+            isFinished = addTimeSlot(hour, min, arrayTimes, timeslots, index, indexB, dayChosen);
+
+            min = 30;
+            isFinished = addTimeSlot(hour, min, arrayTimes, timeslots, index, indexB, dayChosen);
+
+            if (isFinished) {
+                index += 3;
+                indexB += 1;
+            }
+
+
         }
 
 
@@ -130,67 +139,36 @@ public class Display extends Application {
         primaryStage.show();
     }
 
-    public Integer addTimeSlot( int hour, int min, ArrayList<String>[] arrayTimes, List<Timeslot> timeslots, Integer dayIndex, int index, int indexB) {
+    public boolean addTimeSlot(int hour, int min, ArrayList<String>[] arrayTimes, List<Timeslot> timeslots, int index, int indexB, String dayChosen) {
 
-        //System.out.println("I was executed");
-        //System.out.println(dayIndex);
-        //System.out.println("Hour: " + hour);
-        //System.out.println("Minutes: " + min);
+        if ( dayChosen == "Monday") {
+
+        }
+
+        // call recursive function after checking 1 timeslot, and update the indexes to choose the next timeslot for checking with days
+
         String time = String.format("%02d:%02d", hour, min);
         Timeslot timeslot = new Timeslot(time);
 
-        // Until Index reaches end of the timeslots...
-        while ( index < arrayTimes[2].size() - 1 ) {
-
-            System.out.println(dayIndex);
 
 
-
-            String dayValue = "NULL";
-            String dayChosen = arrayTimes[2].get(index); // indexes 0, 3, 6
-            String roomName = arrayTimes[2].get(index + 1);  // indexes 1, 4, 7..
-            String moduleName = arrayTimes[2].get(index + 2); // indexes 2, 5, 8..
-            LocalTime start = LocalTime.parse(arrayTimes[0].get(indexB)); // indexB 0, 1, 2..
-            LocalTime end = LocalTime.parse(arrayTimes[1].get(indexB)); // indexB 0, 1, 2..
-
-            switch (dayIndex) {
-                case 1:
-                    dayValue = "Monday";
-                    break;
-                case 2:
-                    dayValue = "Tuesday";
-                    break;
-                case 3:
-                    dayValue = "Wednesday";
-                    break;
-                case 4:
-                    dayValue = "Thursday";
-                    break;
-                case 5:
-                    dayValue = "Friday";
-                    break;
-            }
+        //String dayChosen = arrayTimes[2].get(index); // indexes 0, 3, 6..
+        String roomName = arrayTimes[2].get(index+1);  // indexes 1, 4, 7..
+        String moduleName = arrayTimes[2].get(index+2); // indexes 2, 5, 8..
+        LocalTime start = LocalTime.parse(arrayTimes[0].get(indexB));
+        LocalTime end = LocalTime.parse(arrayTimes[1].get(indexB));
+        System.out.println(start);
 
 
-            // The timeslot chosen has an equal day, now check the hour to see if adding timeslot is needed
-            if (dayValue.equals(dayChosen)) {
-                if ((hour > start.getHour() || (hour == start.getHour() && min >= start.getMinute())) &&
-                        (hour < end.getHour() || (hour == end.getHour() && min <= end.getMinute()))) {
-                    System.out.println("Timeslot spotted at " + hour + ". Adding to timeslots list.. the day is: " + dayValue);
-                    timeslot.setLecture(dayValue, moduleName + ", " + roomName);
-                    timeslots.add(timeslot);
-                }
-            }
-
-            // increment the indexes, next timeslot now will be chosen
-            index += 3;
-            indexB += 1;
-
-            // ADD RECURSION HERE
-            dayIndex = addTimeSlot(hour, min, arrayTimes, timeslots, dayIndex, index, indexB);
-
+        if ((hour > start.getHour() || (hour == start.getHour() && min >= start.getMinute())) &&
+                (hour < end.getHour() || (hour == end.getHour() && min <= end.getMinute()))) {
+            timeslot.setLecture(dayChosen, moduleName + ", " + roomName);
+            timeslots.add(timeslot);
+        } else {
+            timeslots.add(timeslot);
         }
-        return ++dayIndex;
+        return hour == end.getHour() || min == end.getMinute() % 60;
+
     }
 
     public static class Timeslot {
@@ -269,78 +247,7 @@ public class Display extends Application {
 }
 
 /*
-ArrayList<String>[] arrayTimes = dao.retrieveTimeslots(courseName, courseYear, week);
-
-        List<Timeslot> timeslots = new ArrayList<>();
 
 
-        // Iterate over the hours and minutes to create empty timeslots
-        int min = 0;
-        int index = 0;
-        int indexB = 0;
-        boolean isFinished;
-
-        for (int hour = 9; hour <= 20; hour++) {
-            if (index >= arrayTimes[2].size()) {
-                break; // Exit the loop if we have processed all timeslots
-            }
-
-            String dayChosen = arrayTimes[2].get(index); // get the day
-
-            min = 0;
-            isFinished = addTimeSlot(hour, min, arrayTimes, timeslots, index, indexB, dayChosen);
-
-            min = 30;
-            isFinished = addTimeSlot(hour, min, arrayTimes, timeslots, index, indexB, dayChosen);
-
-            if (isFinished) {
-                index += 3;
-                indexB += 1;
-            }
-
-
-        }
-
-
-        // Add all timeslots to the timetable
-        timetable.getItems().addAll(timeslots);
-
-        root.setCenter(timetable);
-
-        primaryStage.setScene(new Scene(root, 1200, 600));
-        primaryStage.setTitle("Timetable App");
-        primaryStage.show();
-    }
-
-    public boolean addTimeSlot(int hour, int min, ArrayList<String>[] arrayTimes, List<Timeslot> timeslots, int index, int indexB, String dayChosen) {
-
-        if ( dayChosen == "Monday") {
-
-        }
-
-        // call recursive function after checking 1 timeslot, and update the indexes to choose the next timeslot for checking with days
-
-        String time = String.format("%02d:%02d", hour, min);
-        Timeslot timeslot = new Timeslot(time);
-
-
-
-        //String dayChosen = arrayTimes[2].get(index); // indexes 0, 3, 6..
-        String roomName = arrayTimes[2].get(index+1);  // indexes 1, 4, 7..
-        String moduleName = arrayTimes[2].get(index+2); // indexes 2, 5, 8..
-        LocalTime start = LocalTime.parse(arrayTimes[0].get(indexB));
-        LocalTime end = LocalTime.parse(arrayTimes[1].get(indexB));
-        System.out.println(start);
-
-
-        if ((hour > start.getHour() || (hour == start.getHour() && min >= start.getMinute())) &&
-                (hour < end.getHour() || (hour == end.getHour() && min <= end.getMinute()))) {
-            timeslot.setLecture(dayChosen, moduleName + ", " + roomName);
-            timeslots.add(timeslot);
-        } else {
-            timeslots.add(timeslot);
-        }
-        return hour == end.getHour() || min == end.getMinute() % 60;
-
-    }*/
+   */
 
