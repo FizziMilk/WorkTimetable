@@ -94,27 +94,36 @@ public class Display extends Application {
         }
 
         var timeSlotsByTime = new TreeMap<String, TimeSlot>();
-        var timeSlotRows = dao.findAllTimeSlots(courseName, courseYear, week);
+        Iterable<DAO.TimeSlotRow> timeSlotRows = dao.findAllTimeSlots(courseName, courseYear, week);
 
-        for (int hour = 8; hour <= 20; hour++) {
-            var hourAsString = formatHour(hour);
-            var timeSlot = new TimeSlot(hourAsString);
+        for (int hour = 9; hour <= 20; hour++) {
+            for (int minutes = 0; minutes <= 30; minutes += 30) {
 
-            timeSlotsByTime.put(hourAsString, timeSlot);
-        }
+                String timeAsString = formatTime(hour,minutes);
+                TimeSlot timeSlot = new TimeSlot(timeAsString);
 
-        for (var row : timeSlotRows) {
-            var duration = Duration.between(row.getStartTime(), row.getEndTime());
-
-            var hours = duration.toHoursPart();
-            for (var hour = 0; hour <= hours; hour++) {
-                var hourAsString = formatHour(row.getStartTime().getHour() + hour);
-                var timeSlot = timeSlotsByTime.get(hourAsString);
-
-                timeSlot.setLecture(row.getDay(), row.getLecture());
+                timeSlotsByTime.put(timeAsString, timeSlot);
             }
         }
+        for (DAO.TimeSlotRow row : timeSlotRows) {
+            Duration duration = Duration.between(row.getStartTime(), row.getEndTime());
 
+            int hours = duration.toHoursPart();
+            for (int hour = 0; hour <= hours; hour++) {
+                for (int minute = 0; minute <= 30; minute += 30) {
+
+                    String timeAsString = formatTime(row.getStartTime().getHour() + hour, (row.getStartTime().getMinute() + minute)% 60);
+
+                    TimeSlot timeSlot = timeSlotsByTime.get(timeAsString);
+                    if (timeSlot == null) {
+                        timeSlot = new TimeSlot(timeAsString);
+                        timeSlotsByTime.put(timeAsString, timeSlot);
+                    }
+
+                    timeSlot.setLecture(row.getDay(), row.getLecture());
+                }
+            }
+        }
         timetable.getItems().addAll(timeSlotsByTime.values());
 
         root.setCenter(timetable);
@@ -124,33 +133,8 @@ public class Display extends Application {
         primaryStage.show();
     }
 
-    private static String formatHour(int hour) {
-        return String.format("%02d:00", hour);
-    }
-
-    public boolean addTimeSlot(int hour, int min, ArrayList<String>[] arrayTimes, List<TimeSlot> timeslots, int index, int indexB, String dayChosen) {
-
-
-        String time = String.format("%02d:%02d", hour, min);
-        TimeSlot timeslot = new TimeSlot(time);
-
-        //String dayChosen = arrayTimes[2].get(index); // indexes 0, 3, 6..
-        String roomName = arrayTimes[2].get(index + 1);  // indexes 1, 4, 7..
-        String moduleName = arrayTimes[2].get(index + 2); // indexes 2, 5, 8..
-        LocalTime start = LocalTime.parse(arrayTimes[0].get(indexB));
-        LocalTime end = LocalTime.parse(arrayTimes[1].get(indexB));
-        System.out.println(start);
-
-
-        if ((hour > start.getHour() || (hour == start.getHour() && min >= start.getMinute())) &&
-                (hour < end.getHour() || (hour == end.getHour() && min <= end.getMinute()))) {
-            timeslot.setLecture(dayChosen, moduleName + ", " + roomName);
-            timeslots.add(timeslot);
-        } else {
-            timeslots.add(timeslot);
-        }
-        return hour == end.getHour() || min == end.getMinute() % 60;
-
+    private static String formatTime(int hour,int minutes) {
+        return String.format("%02d:%02d", hour, minutes);
     }
 
     public static class TimeSlot {
@@ -160,6 +144,7 @@ public class Display extends Application {
         private final StringProperty wednesday = new SimpleStringProperty("");
         private final StringProperty thursday = new SimpleStringProperty("");
         private final StringProperty friday = new SimpleStringProperty("");
+
 
         public TimeSlot(String time) {
             this.time = time;

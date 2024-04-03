@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1cdab7e4-0322-4a5a-9d53-c9f4f08b6889" name="Changes" comment="Back to the future update">
+    <list default="true" id="1cdab7e4-0322-4a5a-9d53-c9f4f08b6889" name="Changes" comment="Added functionality for half hour timeslots">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/identifier.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/identifier.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Display.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Display.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Timeslot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Timeslot.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -128,7 +126,9 @@
       <workItem from="1711469553729" duration="7831000" />
       <workItem from="1711566915634" duration="54000" />
       <workItem from="1712060521964" duration="337000" />
-      <workItem from="1712153250740" duration="8455000" />
+      <workItem from="1712153250740" duration="11030000" />
+      <workItem from="1712170999013" duration="8282000" />
+      <workItem from="1712179369388" duration="1833000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <option name="closed" value="true" />
@@ -186,7 +186,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712068563079</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Now using a TreeMap to pass information to the tableview object, added a find all timeslots method to dao to retrieve only crucial info about the timeslot">
+      <option name="closed" value="true" />
+      <created>1712161911634</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1712161911634</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -211,9 +219,19 @@
     <MESSAGE value="Turned week and day selection into methods" />
     <MESSAGE value="Created selectStartTime and selectEndTime methods" />
     <MESSAGE value="Back to the future update" />
-    <option name="LAST_COMMIT_MESSAGE" value="Back to the future update" />
+    <MESSAGE value="Now using a TreeMap to pass information to the tableview object, added a find all timeslots method to dao to retrieve only crucial info about the timeslot" />
+    <MESSAGE value="Added functionality for half hour timeslots" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added functionality for half hour timeslots" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.NullPointerException" package="java.lang" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="((java.util.ArrayList)timeSlotRows).get(0)" custom="java.util.ArrayList" />
