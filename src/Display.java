@@ -12,9 +12,7 @@ import javafx.stage.Stage;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Display extends Application {
 
@@ -31,6 +29,7 @@ public class Display extends Application {
             throw new RuntimeException(e);
         }
     }
+
     public static void menu() throws SQLException {
         System.out.println("**********************************************" +
                 "\nWelcome to the Timetable Generation System.\n" +
@@ -40,8 +39,7 @@ public class Display extends Application {
 
 
         boolean loop = true;
-        while (loop)
-        {
+        while (loop) {
 
             System.out.println("""
                     1. Create a new timeslot
@@ -54,8 +52,7 @@ public class Display extends Application {
                     8. Exit
                     """);
             int week = Integer.parseInt(input.processUserInput("Put your numeric input below:", true));
-            switch(week)
-            {
+            switch (week) {
                 case 1 -> input.addTimeslot();
                 case 2 -> launch();
                 case 3 -> input.addCourse();
@@ -68,6 +65,7 @@ public class Display extends Application {
             }
         }
     }
+
     @Override
     public void start(Stage primaryStage) {
         BorderPane root = new BorderPane();
@@ -77,60 +75,47 @@ public class Display extends Application {
         int courseYear = Integer.parseInt(dao.retrieveOption("courseYear"));
         int week = input.weekSelection();
 
-        TableView<Timeslot> timetable = new TableView<>();
+        TableView<TimeSlot> timetable = new TableView<>();
         timetable.setPrefWidth(1000); // Set preferred width for the table
 
         // Create column for the time slots
-        TableColumn<Timeslot, String> timeColumn = new TableColumn<>("Time");
+        TableColumn<TimeSlot, String> timeColumn = new TableColumn<>("Time");
         timeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTime()));
         timetable.getColumns().add(timeColumn);
 
         // Create columns for each day
         for (String day : days) {
-            TableColumn<Timeslot, String> dayColumn = new TableColumn<>(day);
+            TableColumn<TimeSlot, String> dayColumn = new TableColumn<>(day);
             dayColumn.setCellValueFactory(cellData -> {
-                Timeslot timeslot = cellData.getValue();
+                TimeSlot timeslot = cellData.getValue();
                 return new SimpleStringProperty(timeslot.getLecture(day));
             });
             timetable.getColumns().add(dayColumn);
         }
 
-        // retrieve arrayList that contains two ArrayLists-> [0] is startTimes, [1] is endTimes, [2] is values
-        ArrayList<String>[] arrayTimes = dao.retrieveTimeslots(courseName, courseYear, week);
+        var timeSlotsByTime = new TreeMap<String, TimeSlot>();
+        var timeSlotRows = dao.findAllTimeSlots(courseName, courseYear, week);
 
-        List<Timeslot> timeslots = new ArrayList<>();
+        for (int hour = 8; hour <= 20; hour++) {
+            var hourAsString = formatHour(hour);
+            var timeSlot = new TimeSlot(hourAsString);
 
-
-        // Iterate over the hours and minutes to create empty timeslots
-        int min = 0;
-        int index = 0;
-        int indexB = 0;
-        boolean isFinished;
-
-        for (int hour = 9; hour <= 20; hour++) {
-            if (index >= arrayTimes[2].size()) {
-                break; // Exit the loop if we have processed all timeslots
-            }
-
-            String dayChosen = arrayTimes[2].get(index); // get the day
-
-            min = 0;
-            isFinished = addTimeSlot(hour, min, arrayTimes, timeslots, index, indexB, dayChosen);
-
-            min = 30;
-            isFinished = addTimeSlot(hour, min, arrayTimes, timeslots, index, indexB, dayChosen);
-
-            if (isFinished) {
-                index += 3;
-                indexB += 1;
-            }
-
-
+            timeSlotsByTime.put(hourAsString, timeSlot);
         }
 
+        for (var row : timeSlotRows) {
+            var duration = Duration.between(row.getStartTime(), row.getEndTime());
 
-        // Add all timeslots to the timetable
-        timetable.getItems().addAll(timeslots);
+            var hours = duration.toHoursPart();
+            for (var hour = 0; hour <= hours; hour++) {
+                var hourAsString = formatHour(row.getStartTime().getHour() + hour);
+                var timeSlot = timeSlotsByTime.get(hourAsString);
+
+                timeSlot.setLecture(row.getDay(), row.getLecture());
+            }
+        }
+
+        timetable.getItems().addAll(timeSlotsByTime.values());
 
         root.setCenter(timetable);
 
@@ -139,22 +124,19 @@ public class Display extends Application {
         primaryStage.show();
     }
 
-    public boolean addTimeSlot(int hour, int min, ArrayList<String>[] arrayTimes, List<Timeslot> timeslots, int index, int indexB, String dayChosen) {
+    private static String formatHour(int hour) {
+        return String.format("%02d:00", hour);
+    }
 
-        if ( dayChosen == "Monday") {
+    public boolean addTimeSlot(int hour, int min, ArrayList<String>[] arrayTimes, List<TimeSlot> timeslots, int index, int indexB, String dayChosen) {
 
-        }
-
-        // call recursive function after checking 1 timeslot, and update the indexes to choose the next timeslot for checking with days
 
         String time = String.format("%02d:%02d", hour, min);
-        Timeslot timeslot = new Timeslot(time);
-
-
+        TimeSlot timeslot = new TimeSlot(time);
 
         //String dayChosen = arrayTimes[2].get(index); // indexes 0, 3, 6..
-        String roomName = arrayTimes[2].get(index+1);  // indexes 1, 4, 7..
-        String moduleName = arrayTimes[2].get(index+2); // indexes 2, 5, 8..
+        String roomName = arrayTimes[2].get(index + 1);  // indexes 1, 4, 7..
+        String moduleName = arrayTimes[2].get(index + 2); // indexes 2, 5, 8..
         LocalTime start = LocalTime.parse(arrayTimes[0].get(indexB));
         LocalTime end = LocalTime.parse(arrayTimes[1].get(indexB));
         System.out.println(start);
@@ -171,7 +153,7 @@ public class Display extends Application {
 
     }
 
-    public static class Timeslot {
+    public static class TimeSlot {
         private final String time;
         private final StringProperty monday = new SimpleStringProperty("");
         private final StringProperty tuesday = new SimpleStringProperty("");
@@ -179,7 +161,7 @@ public class Display extends Application {
         private final StringProperty thursday = new SimpleStringProperty("");
         private final StringProperty friday = new SimpleStringProperty("");
 
-        public Timeslot(String time) {
+        public TimeSlot(String time) {
             this.time = time;
         }
 
@@ -188,40 +170,14 @@ public class Display extends Application {
         }
 
         public String getLecture(String day) {
-            switch (day) {
-                case "Monday":
-                    return monday.get();
-                case "Tuesday":
-                    return tuesday.get();
-                case "Wednesday":
-                    return wednesday.get();
-                case "Thursday":
-                    return thursday.get();
-                case "Friday":
-                    return friday.get();
-                default:
-                    return "";
-            }
-        }
-
-        public StringProperty mondayProperty() {
-            return monday;
-        }
-
-        public StringProperty tuesdayProperty() {
-            return tuesday;
-        }
-
-        public StringProperty wednesdayProperty() {
-            return wednesday;
-        }
-
-        public StringProperty thursdayProperty() {
-            return thursday;
-        }
-
-        public StringProperty fridayProperty() {
-            return friday;
+            return switch (day) {
+                case "Monday" -> monday.get();
+                case "Tuesday" -> tuesday.get();
+                case "Wednesday" -> wednesday.get();
+                case "Thursday" -> thursday.get();
+                case "Friday" -> friday.get();
+                default -> "";
+            };
         }
 
         public void setLecture(String day, String lecture) {
@@ -245,9 +201,4 @@ public class Display extends Application {
         }
     }
 }
-
-/*
-
-
-   */
 

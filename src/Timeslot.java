@@ -1,7 +1,6 @@
 public class Timeslot {
 
 
-
     private String courseName;
     private String year;
     private int week;

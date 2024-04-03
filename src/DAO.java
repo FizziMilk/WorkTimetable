@@ -1,10 +1,8 @@
 //This class handles interactions between the database and the rest of the program
 
 import javax.swing.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -65,7 +63,7 @@ public class DAO {
             ps.setString(9, timeslot.getLecturer());
             ps.setString(10, timeslot.getModule());
             ps.setString(11, timeslot.getModuleReference());
-            ps.setString(12,timeslot.getRoomCapacity());
+            ps.setString(12, timeslot.getRoomCapacity());
 
             // executeUpdate returns 1 if successful
             int rowsAffected = ps.executeUpdate();
@@ -80,6 +78,7 @@ public class DAO {
             e.printStackTrace();
         }
     }
+
     public boolean clashCheck(int week, String day, String lecturerName, String newStartTime, String newEndTime) throws SQLException {
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -89,7 +88,7 @@ public class DAO {
             pstmt.setString(2, day);
 
             // Execute the query
-            try(ResultSet rs = pstmt.executeQuery();) {
+            try (ResultSet rs = pstmt.executeQuery();) {
 
                 // Iterate over the existing timeslots
                 while (rs.next()) {
@@ -106,9 +105,10 @@ public class DAO {
                     }
                 }
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
-        }return false;
+        }
+        return false;
     }
 
     public void addCourseToDatabase(String courseName, String courseCode, int courseYear) {
@@ -161,11 +161,11 @@ public class DAO {
 
             //Adds the module to modules_to_courses database
             ps2.setString(1, courseName);
-            ps2.setString(2,moduleName);
+            ps2.setString(2, moduleName);
             // executeUpdate returns 1 if successful
             int rowsAffected = ps.executeUpdate();
             int rowsAffected2 = ps2.executeUpdate();
-            if (rowsAffected > 0 || rowsAffected2 > 0 ) {
+            if (rowsAffected > 0 || rowsAffected2 > 0) {
                 System.out.println("Module added successfully.");
             } else {
                 System.err.println("Failed to add module to the database.");
@@ -196,22 +196,22 @@ public class DAO {
         }
     }
 
-    public void addModuleToCourse(String course, String module){
-            try(Connection conn = databaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(INSERT_MODULE_TO_COURSE)){
-                ps.setString(1,course);
-                ps.setString(2,module);
+    public void addModuleToCourse(String course, String module) {
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(INSERT_MODULE_TO_COURSE)) {
+            ps.setString(1, course);
+            ps.setString(2, module);
 
-                int rowsAffected = ps.executeUpdate();
-                if (rowsAffected > 0) {
-                    System.out.println("Module successfully added to course.");
-                } else {
-                    System.err.println("Failed to add module to course.");
-                }
-            }  catch (SQLException e) {
-                    System.err.println("Exception: adding module to course");
-                    e.printStackTrace();
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Module successfully added to course.");
+            } else {
+                System.err.println("Failed to add module to course.");
             }
+        } catch (SQLException e) {
+            System.err.println("Exception: adding module to course");
+            e.printStackTrace();
+        }
     }
 
     public String retrieveOption(String entry) {
@@ -240,7 +240,8 @@ public class DAO {
                 msg = "Select the room for this timeslot";
                 x = RETRIEVE_ROOMS_SQL;
                 break;
-            default: System.out.println("Error in Retrieve() method");
+            default:
+                System.out.println("Error in Retrieve() method");
         }
 
         Set<String> options = new HashSet<>();
@@ -313,6 +314,7 @@ public class DAO {
         }
         return null;
     }
+
     public String retrieveModuleReference(String module) {
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(QUERY_MODULECODE_SQL)) {
@@ -331,7 +333,35 @@ public class DAO {
         return null;
     }
 
-    // co
+    public Iterable<TimeSlotRow> findAllTimeSlots(String courseName, int courseYear, int week) {
+        var rows = new ArrayList<TimeSlotRow>();
+
+        try (var connection = databaseManager.getConnection(); var statement = connection.prepareStatement(QUERY_TIMESLOTS)) {
+            statement.setString(1, courseName);
+            statement.setInt(2, courseYear);
+            statement.setInt(3, week);
+
+            try (var resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    var row = new TimeSlotRow(
+                        resultSet.getString(1), // course_name
+                        resultSet.getString(2), // year
+                        resultSet.getInt(3),    // week
+                        resultSet.getString(4), // day
+                        LocalTime.parse(resultSet.getString(5)), // start_time
+                        LocalTime.parse(resultSet.getString(6)),  // end_time
+                        resultSet.getString(10)
+                    );
+
+                    rows.add(row);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Exception: retrieving room_type from room: " + e.getMessage());
+        }
+
+        return rows;
+    }
 
     public ArrayList<String>[] retrieveTimeslots(String courseName, int courseYear, int week) {
 
@@ -342,6 +372,7 @@ public class DAO {
 
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(QUERY_TIMESLOTS)) {
+
             ps.setString(1, courseName);
             ps.setInt(2, courseYear);
             ps.setInt(3, week);
@@ -368,6 +399,63 @@ public class DAO {
         }
         return null;
 
+    }
+
+    public static class TimeSlotRow {
+
+        private final String courseName;
+        private final String year;
+        private final int week;
+        private final String day;
+        private final LocalTime startTime;
+        private final LocalTime endTime;
+        private final String lecture;
+
+        public TimeSlotRow(
+                String courseName,
+                String year,
+                int week,
+                String day,
+                LocalTime startTime,
+                LocalTime endTime,
+                String lecture
+        ) {
+            this.courseName = courseName;
+            this.year = year;
+            this.week = week;
+            this.day = day;
+            this.startTime = startTime;
+            this.endTime = endTime;
+            this.lecture = lecture;
+        }
+
+        public String getCourseName() {
+            return courseName;
+        }
+
+        public String getYear() {
+            return year;
+        }
+
+        public int getWeek() {
+            return week;
+        }
+
+        public String getDay() {
+            return day;
+        }
+
+        public LocalTime getStartTime() {
+            return startTime;
+        }
+
+        public LocalTime getEndTime() {
+            return endTime;
+        }
+
+        public String getLecture() {
+            return lecture;
+        }
     }
 }
 
