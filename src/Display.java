@@ -108,20 +108,26 @@ public class Display extends Application {
         for (DAO.TimeSlotRow row : timeSlotRows) {
             Duration duration = Duration.between(row.getStartTime(), row.getEndTime());
 
-            int hours = duration.toHoursPart();
-            for (int hour = 0; hour <= hours; hour++) {
-                for (int minute = 0; minute <= 30; minute += 30) {
+            int totalMinutes = (int) duration.toMinutes();
+            for (int minute = 0; minute <= totalMinutes; minute += 30) {
+                int currentHour = row.getStartTime().getHour() + minute / 60;
+                int currentMinute = row.getStartTime().getMinute() + minute % 60;
 
-                    String timeAsString = formatTime(row.getStartTime().getHour() + hour, (row.getStartTime().getMinute() + minute)% 60);
-
-                    TimeSlot timeSlot = timeSlotsByTime.get(timeAsString);
-                    if (timeSlot == null) {
-                        timeSlot = new TimeSlot(timeAsString);
-                        timeSlotsByTime.put(timeAsString, timeSlot);
-                    }
-
-                    timeSlot.setLecture(row.getDay(), row.getLecture());
+                // Handle case when minutes exceed 59
+                if (currentMinute >= 60) {
+                    currentHour++;
+                    currentMinute -= 60;
                 }
+
+                String timeAsString = formatTime(currentHour, currentMinute);
+
+                TimeSlot timeSlot = timeSlotsByTime.get(timeAsString);
+                if (timeSlot == null) {
+                    timeSlot = new TimeSlot(timeAsString);
+                    timeSlotsByTime.put(timeAsString, timeSlot);
+                }
+
+                timeSlot.setLecture(row.getDay(), row.getLecture(),row.getRoom());
             }
         }
         timetable.getItems().addAll(timeSlotsByTime.values());
@@ -165,22 +171,22 @@ public class Display extends Application {
             };
         }
 
-        public void setLecture(String day, String lecture) {
+        public void setLecture(String day, String lecture,String room) {
             switch (day) {
                 case "Monday":
-                    monday.set(lecture);
+                    monday.set(lecture +" " + room);
                     break;
                 case "Tuesday":
-                    tuesday.set(lecture);
+                    tuesday.set(lecture +"  " + room);
                     break;
                 case "Wednesday":
-                    wednesday.set(lecture);
+                    wednesday.set(lecture +" " + room);
                     break;
                 case "Thursday":
-                    thursday.set(lecture);
+                    thursday.set(lecture +" " + room);
                     break;
                 case "Friday":
-                    friday.set(lecture);
+                    friday.set(lecture +" " + room);
                     break;
             }
         }

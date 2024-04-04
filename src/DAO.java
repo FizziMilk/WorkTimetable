@@ -350,6 +350,7 @@ public class DAO {
                         resultSet.getString(4), // day
                         LocalTime.parse(resultSet.getString(5)), // start_time
                         LocalTime.parse(resultSet.getString(6)),  // end_time
+                        resultSet.getString(7),
                         resultSet.getString(10)
                     );
 
@@ -410,6 +411,7 @@ public class DAO {
         private final LocalTime startTime;
         private final LocalTime endTime;
         private final String lecture;
+        private final String room;
 
         public TimeSlotRow(
                 String courseName,
@@ -418,7 +420,8 @@ public class DAO {
                 String day,
                 LocalTime startTime,
                 LocalTime endTime,
-                String lecture
+                String lecture,
+                String room
         ) {
             this.courseName = courseName;
             this.year = year;
@@ -427,6 +430,7 @@ public class DAO {
             this.startTime = startTime;
             this.endTime = endTime;
             this.lecture = lecture;
+            this.room = room;
         }
 
         public String getCourseName() {
@@ -447,6 +451,10 @@ public class DAO {
 
         public LocalTime getStartTime() {
             return startTime;
+        }
+
+        public String getRoom(){
+            return room;
         }
 
         public LocalTime getEndTime() {

@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1cdab7e4-0322-4a5a-9d53-c9f4f08b6889" name="Changes" comment="Added functionality for half hour timeslots">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identifier.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/identifier.sqlite" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Display.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Display.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -128,7 +128,8 @@
       <workItem from="1712060521964" duration="337000" />
       <workItem from="1712153250740" duration="11030000" />
       <workItem from="1712170999013" duration="8282000" />
-      <workItem from="1712179369388" duration="1833000" />
+      <workItem from="1712179369388" duration="1869000" />
+      <workItem from="1712239469492" duration="3944000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <option name="closed" value="true" />
@@ -194,7 +195,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712161911634</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Added functionality for half hour timeslots">
+      <option name="closed" value="true" />
+      <created>1712181241741</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1712181241741</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
