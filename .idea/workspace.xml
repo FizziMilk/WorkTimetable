@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1cdab7e4-0322-4a5a-9d53-c9f4f08b6889" name="Changes" comment="Added functionality for half hour timeslots">
+    <list default="true" id="1cdab7e4-0322-4a5a-9d53-c9f4f08b6889" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identifier.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/identifier.sqlite" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Display.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Display.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/InputProcessing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/InputProcessing.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,11 +80,14 @@
     <configuration name="Display" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Display" />
       <module name="WorkTimetable" />
-      <option name="VM_PARAMETERS" value="--module-path C:\Users\benas\IdeaProjects\WorkTimetable\javafx\javafx-sdk-22\lib --add-modules javafx.controls,javafx.fxml" />
+      <option name="VM_PARAMETERS" value="--module-path javafx/javafx-sdk-22/lib --add-modules javafx.controls,javafx.fxml" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+  </component>
+  <component name="ShelveChangesManager">
+    <option name="remove_strategy" value="true" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -230,7 +235,7 @@
     <MESSAGE value="Back to the future update" />
     <MESSAGE value="Now using a TreeMap to pass information to the tableview object, added a find all timeslots method to dao to retrieve only crucial info about the timeslot" />
     <MESSAGE value="Added functionality for half hour timeslots" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added functionality for half hour timeslots" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

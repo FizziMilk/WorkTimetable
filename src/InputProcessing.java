@@ -26,7 +26,7 @@ public class InputProcessing {
             // Check if the user wants to quit
             if ("q".equalsIgnoreCase(userInput)) {
                 System.out.println("Leaving to menu");
-                // replace menu
+                Display.menu();
             }
             // Validate user input
             if (isValidInput(userInput,requireNumeric)) {
@@ -116,7 +116,7 @@ public class InputProcessing {
         String startTime = arrayTime[0];
         String endTime = arrayTime[1];
 
-        if(dao.clashCheck(week,day,lecturerName,startTime, endTime)){
+        if(dao.clashCheck(week,day,lecturerName,startTime, endTime,moduleName,courseName,roomName)){
             return;
         }
 

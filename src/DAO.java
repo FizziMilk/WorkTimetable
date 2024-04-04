@@ -1,13 +1,10 @@
 //This class handles interactions between the database and the rest of the program
 
-import com.sun.javafx.scene.input.InputEventUtils;
-
 import javax.swing.*;
 import java.sql.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Scanner;
 import java.util.Set;
 
 public class DAO {
@@ -43,7 +40,7 @@ public class DAO {
     private static final String QUERY_MODULECODE_SQL = "SELECT * FROM modules WHERE module_name = ?";
     private static final String QUERY_TIMESLOTS = "SELECT * FROM timeslots WHERE course_name = ? AND year = ? AND week = ?";
 
-    String query = "SELECT * FROM timeslots WHERE Week = ? AND Day = ?";
+    String TIMESLOT_DAY_WEEK_CHECK = "SELECT * FROM timeslots WHERE Week = ? AND Day = ?";
 
     private final DatabaseManager databaseManager;
 
@@ -82,27 +79,72 @@ public class DAO {
         }
     }
 
-    public boolean clashCheck(int week, String day, String lecturerName, String newStartTime, String newEndTime) throws SQLException {
+    public boolean clashCheck(int week, String day, String lecturerName, String newStartTime, String newEndTime, String moduleName, String courseName, String roomName) throws SQLException {
         try (Connection conn = databaseManager.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+             PreparedStatement pstmt = conn.prepareStatement(TIMESLOT_DAY_WEEK_CHECK)) {
 
-            // Set the week and day parameters in the prepared statement
+            // Set the week, day, and module parameters in the prepared statement
             pstmt.setInt(1, week);
             pstmt.setString(2, day);
-
+            InputProcessing input = new InputProcessing();
             // Execute the query
             try (ResultSet rs = pstmt.executeQuery();) {
+
+                // Fetch courses associated with the given module
+                Set<String> coursesForModule = new HashSet<>();
+                String fetchCoursesQuery = "SELECT courses FROM modules_to_courses WHERE modules = ?";
+                try (PreparedStatement fetchCoursesStmt = conn.prepareStatement(fetchCoursesQuery)) {
+                    fetchCoursesStmt.setString(1, moduleName);
+                    try (ResultSet coursesRs = fetchCoursesStmt.executeQuery()) {
+                        while (coursesRs.next()) {
+                            coursesForModule.add(coursesRs.getString("courses"));
+                        }
+                    }
+                }
 
                 // Iterate over the existing timeslots
                 while (rs.next()) {
                     String startTime = rs.getString("start_time");
                     String endTime = rs.getString("end_time");
                     String existingLecturerName = rs.getString("lecturer");
+                    String existingCourseName = rs.getString("course_name");
+                    String existingModuleName = rs.getString("module");
+                    String existingRoomName = rs.getString("room");
 
-                    // Check for clashes
+                    // Check if the module is shared by the provided course
+                    if (moduleName.equals(existingModuleName) && coursesForModule.contains(existingCourseName)) {
+                        // No clash detection needed if the module is shared by the provided course
+                        return false;
+                    }
+
+                    // Check if the lecturer is busy at the specified time
                     if (lecturerName.equals(existingLecturerName)) {
-                        if (newStartTime.compareTo(endTime) < 0 && newEndTime.compareTo(startTime) > 0) {
-                            InputProcessing input = new InputProcessing();
+                        // Check if the timeslot overlaps with the existing timeslot for the same lecturer
+                        if (day.equals(rs.getString("day")) &&
+                                newStartTime.compareTo(endTime) < 0 && newEndTime.compareTo(startTime) > 0) {
+                            // Clash detected
+                            input.processUserInput("Clash detected! Lecturer is busy at that time.\nPress any character and enter to proceed.", false);
+                            return true;
+                        }
+                    }
+
+                    // Check if the room is busy at the specified time
+                    if (roomName.equals(existingRoomName)) {
+                        // Check if the timeslot overlaps with the existing timeslot for the same room
+                        if (day.equals(rs.getString("day")) &&
+                                newStartTime.compareTo(endTime) < 0 && newEndTime.compareTo(startTime) > 0) {
+                            // Clash detected
+                            input.processUserInput("Clash detected! Room is busy at that time.\nPress any character and enter to proceed.", false);
+                            return true;
+                        }
+                    }
+
+                    // Check for clashes only if the timeslot is for the same course
+                    if (existingCourseName.equals(courseName)) {
+                        // Check if the timeslot overlaps with the existing timeslot for the same course and day
+                        if (day.equals(rs.getString("day")) &&
+                                newStartTime.compareTo(endTime) < 0 && newEndTime.compareTo(startTime) > 0) {
+                            // Clash detected
                             input.processUserInput("Clash detected! Cannot create the new timeslot.\nPress any character and enter to proceed.", false);
                             return true;
                         }
@@ -112,8 +154,10 @@ public class DAO {
         } catch (SQLException e) {
             System.out.println(e);
         }
-        return false;
+        return false; // No clash detected
     }
+
+
 
     public void addCourseToDatabase(String courseName, String courseCode, int courseYear) {
         try (Connection conn = databaseManager.getConnection();
@@ -369,106 +413,10 @@ public class DAO {
         return rows;
     }
 
-    public ArrayList<String>[] retrieveTimeslots(String courseName, int courseYear, int week) {
 
-        ArrayList<String>[] array = new ArrayList[3];
-        ArrayList<String> startTimes = new ArrayList<>();
-        ArrayList<String> endTimes = new ArrayList<>();
-        ArrayList<String> values = new ArrayList<>();
+    public record TimeSlotRow(String courseName, String year, int week, String day, LocalTime startTime,
+                              LocalTime endTime, String lecture, String room) {
 
-        try (Connection conn = databaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(QUERY_TIMESLOTS)) {
-
-            ps.setString(1, courseName);
-            ps.setInt(2, courseYear);
-            ps.setInt(3, week);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    startTimes.add(rs.getString(5));
-                    endTimes.add(rs.getString(6));
-                    values.add(rs.getString(4)); // index 0, 3, 6... -> day
-                    values.add(rs.getString(7)); // index 1, 4, 7... -> roomName
-                    values.add(rs.getString(10));// index 2, 5, 8... -> moduleName
-                }
-
-                array[0] = startTimes;
-                array[1] = endTimes;
-                array[2] = values;
-                // if ur quesitoning if this work, ye it does cuz i system printed the values to check
-
-                return array;
-            }
-        } catch (SQLException e) {
-            System.err.println("Exception: retrieving room_type from room");
-            e.printStackTrace();
-        }
-        return null;
-
-    }
-
-    public static class TimeSlotRow {
-
-        private final String courseName;
-        private final String year;
-        private final int week;
-        private final String day;
-        private final LocalTime startTime;
-        private final LocalTime endTime;
-        private final String lecture;
-        private final String room;
-
-        public TimeSlotRow(
-                String courseName,
-                String year,
-                int week,
-                String day,
-                LocalTime startTime,
-                LocalTime endTime,
-                String lecture,
-                String room
-        ) {
-            this.courseName = courseName;
-            this.year = year;
-            this.week = week;
-            this.day = day;
-            this.startTime = startTime;
-            this.endTime = endTime;
-            this.lecture = lecture;
-            this.room = room;
-        }
-
-        public String getCourseName() {
-            return courseName;
-        }
-
-        public String getYear() {
-            return year;
-        }
-
-        public int getWeek() {
-            return week;
-        }
-
-        public String getDay() {
-            return day;
-        }
-
-        public LocalTime getStartTime() {
-            return startTime;
-        }
-
-        public String getRoom(){
-            return room;
-        }
-
-        public LocalTime getEndTime() {
-            return endTime;
-        }
-
-        public String getLecture() {
-            return lecture;
-        }
     }
 }
 

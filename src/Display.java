@@ -11,7 +11,6 @@ import javafx.stage.Stage;
 
 import java.sql.SQLException;
 import java.time.Duration;
-import java.time.LocalTime;
 import java.util.*;
 
 public class Display extends Application {
@@ -106,12 +105,12 @@ public class Display extends Application {
             }
         }
         for (DAO.TimeSlotRow row : timeSlotRows) {
-            Duration duration = Duration.between(row.getStartTime(), row.getEndTime());
+            Duration duration = Duration.between(row.startTime(), row.endTime());
 
             int totalMinutes = (int) duration.toMinutes();
             for (int minute = 0; minute <= totalMinutes; minute += 30) {
-                int currentHour = row.getStartTime().getHour() + minute / 60;
-                int currentMinute = row.getStartTime().getMinute() + minute % 60;
+                int currentHour = row.startTime().getHour() + minute / 60;
+                int currentMinute = row.startTime().getMinute() + minute % 60;
 
                 // Handle case when minutes exceed 59
                 if (currentMinute >= 60) {
@@ -127,7 +126,7 @@ public class Display extends Application {
                     timeSlotsByTime.put(timeAsString, timeSlot);
                 }
 
-                timeSlot.setLecture(row.getDay(), row.getLecture(),row.getRoom());
+                timeSlot.setLecture(row.day(), row.lecture(),row.room());
             }
         }
         timetable.getItems().addAll(timeSlotsByTime.values());
