@@ -7,7 +7,10 @@
     <list default="true" id="1cdab7e4-0322-4a5a-9d53-c9f4f08b6889" name="Changes" comment="Added functionality for half hour timeslots">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/identifier.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/identifier.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Display.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Display.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Classroom.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Course.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/InputProcessing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/InputProcessing.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +81,7 @@
     <configuration name="Display" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Display" />
       <module name="WorkTimetable" />
-      <option name="VM_PARAMETERS" value="--module-path C:\Users\benas\IdeaProjects\WorkTimetable\javafx\javafx-sdk-22\lib --add-modules javafx.controls,javafx.fxml" />
+      <option name="VM_PARAMETERS" value="--module-path C:\Users\asus\Downloads\openjfx-21.0.2_windows-x64_bin-sdk\javafx-sdk-21.0.2\lib --add-modules javafx.controls,javafx.fxml" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>

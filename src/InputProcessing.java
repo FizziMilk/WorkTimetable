@@ -122,11 +122,11 @@ public class InputProcessing {
 
 
         if(duration.toMinutes() > Duration.ofHours(3).toMinutes()) {
-            System.out.println("Duration is larger than 3 hours");
+            processUserInput("Duration is larger than 3 hours, not valid.\nPress any character and enter to proceed.", false);
             return;
         }
         if(duration.toMinutes() < Duration.ofHours(1).toMinutes()){
-            System.out.println("Duration is less than 1 hours");
+            processUserInput("Duration is smaller than 1 hour, not valid.\nPress any character and enter to proceed.", false);
             return;
         }
 

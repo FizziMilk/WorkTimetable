@@ -1,10 +1,13 @@
 //This class handles interactions between the database and the rest of the program
 
+import com.sun.javafx.scene.input.InputEventUtils;
+
 import javax.swing.*;
 import java.sql.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
 
 public class DAO {
@@ -99,7 +102,8 @@ public class DAO {
                     // Check for clashes
                     if (lecturerName.equals(existingLecturerName)) {
                         if (newStartTime.compareTo(endTime) < 0 && newEndTime.compareTo(startTime) > 0) {
-                            System.out.println("Clash detected! Cannot create the new timeslot.");
+                            InputProcessing input = new InputProcessing();
+                            input.processUserInput("Clash detected! Cannot create the new timeslot.\nPress any character and enter to proceed.", false);
                             return true;
                         }
                     }
@@ -334,16 +338,17 @@ public class DAO {
     }
 
     public Iterable<TimeSlotRow> findAllTimeSlots(String courseName, int courseYear, int week) {
-        var rows = new ArrayList<TimeSlotRow>();
+        ArrayList<TimeSlotRow> rows = new ArrayList<>();
 
-        try (var connection = databaseManager.getConnection(); var statement = connection.prepareStatement(QUERY_TIMESLOTS)) {
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement statement = conn.prepareStatement(QUERY_TIMESLOTS)) {
             statement.setString(1, courseName);
             statement.setInt(2, courseYear);
             statement.setInt(3, week);
 
-            try (var resultSet = statement.executeQuery()) {
+            try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    var row = new TimeSlotRow(
+                    TimeSlotRow row = new TimeSlotRow(
                         resultSet.getString(1), // course_name
                         resultSet.getString(2), // year
                         resultSet.getInt(3),    // week
