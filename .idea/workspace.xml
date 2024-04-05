@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1cdab7e4-0322-4a5a-9d53-c9f4f08b6889" name="Changes" comment="Extended the clashCheck method to account for rooms, to check if the module is shared by both courses, and if the lecturer is busy at that time. Also provides the user with feedback on why the clash occurred.">
+    <list default="true" id="1cdab7e4-0322-4a5a-9d53-c9f4f08b6889" name="Changes" comment="clashCheck now correctly disallows addition of timeslots if a timeslot already exists for that course, but allows timeslots for modules shared by courses.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/identifier.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/identifier.sqlite" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/InputProcessing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/InputProcessing.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -215,7 +214,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712254743091</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="clashCheck now correctly disallows addition of timeslots if a timeslot already exists for that course, but allows timeslots for modules shared by courses.">
+      <option name="closed" value="true" />
+      <created>1712343452202</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1712343452202</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -243,7 +250,8 @@
     <MESSAGE value="Now using a TreeMap to pass information to the tableview object, added a find all timeslots method to dao to retrieve only crucial info about the timeslot" />
     <MESSAGE value="Added functionality for half hour timeslots" />
     <MESSAGE value="Extended the clashCheck method to account for rooms, to check if the module is shared by both courses, and if the lecturer is busy at that time. Also provides the user with feedback on why the clash occurred." />
-    <option name="LAST_COMMIT_MESSAGE" value="Extended the clashCheck method to account for rooms, to check if the module is shared by both courses, and if the lecturer is busy at that time. Also provides the user with feedback on why the clash occurred." />
+    <MESSAGE value="clashCheck now correctly disallows addition of timeslots if a timeslot already exists for that course, but allows timeslots for modules shared by courses." />
+    <option name="LAST_COMMIT_MESSAGE" value="clashCheck now correctly disallows addition of timeslots if a timeslot already exists for that course, but allows timeslots for modules shared by courses." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

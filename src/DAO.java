@@ -133,7 +133,6 @@ public class DAO {
                         }
                     }
                 }
-
                 // Check if the module is shared by the provided course
                 boolean moduleShared = coursesForModule.contains(courseName);
 
