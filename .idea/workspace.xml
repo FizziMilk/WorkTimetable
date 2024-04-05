@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1cdab7e4-0322-4a5a-9d53-c9f4f08b6889" name="Changes" comment="">
+    <list default="true" id="1cdab7e4-0322-4a5a-9d53-c9f4f08b6889" name="Changes" comment="Extended the clashCheck method to account for rooms, to check if the module is shared by both courses, and if the lecturer is busy at that time. Also provides the user with feedback on why the clash occurred.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/identifier.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/identifier.sqlite" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/DAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Display.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Display.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/InputProcessing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/InputProcessing.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -208,7 +207,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712181241741</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Extended the clashCheck method to account for rooms, to check if the module is shared by both courses, and if the lecturer is busy at that time. Also provides the user with feedback on why the clash occurred.">
+      <option name="closed" value="true" />
+      <created>1712254743091</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1712254743091</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -235,7 +242,8 @@
     <MESSAGE value="Back to the future update" />
     <MESSAGE value="Now using a TreeMap to pass information to the tableview object, added a find all timeslots method to dao to retrieve only crucial info about the timeslot" />
     <MESSAGE value="Added functionality for half hour timeslots" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="Extended the clashCheck method to account for rooms, to check if the module is shared by both courses, and if the lecturer is busy at that time. Also provides the user with feedback on why the clash occurred." />
+    <option name="LAST_COMMIT_MESSAGE" value="Extended the clashCheck method to account for rooms, to check if the module is shared by both courses, and if the lecturer is busy at that time. Also provides the user with feedback on why the clash occurred." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -246,9 +254,15 @@
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="org.sqlite.jdbc4.JDBC4ResultSet" memberName="closeStmt" />
+      </pinned-members>
+    </pin-to-top-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="((java.util.ArrayList)timeSlotRows).get(0)" custom="java.util.ArrayList" />
+        <watch expression="((JDBC4ResultSet)rs).columnNameToIndex" custom="org.sqlite.jdbc4.JDBC4ResultSet" />
       </configuration>
     </watches-manager>
   </component>

@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.sql.*;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -52,7 +53,7 @@ public class DAO {
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(INSERT_ITEM_SQL)) {
             //Set parameters for the PreparedStatement
-            ps.setString(1, timeslot.getCourseName());
+            ps.setString(1, timeslot.getCourseName()+"_"+timeslot.getYear());
             ps.setString(2, timeslot.getYear());
             ps.setInt(3, timeslot.getWeek());
             ps.setString(4, timeslot.getDay());
@@ -78,6 +79,25 @@ public class DAO {
             e.printStackTrace();
         }
     }
+    public void removeTimeslot(String courseName, int week, String day, String startTime) {
+        try (Connection conn = databaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement("DELETE FROM timeslots WHERE course_name = ? AND week = ? AND day = ? AND start_time = ?")) {
+            ps.setString(1, courseName);
+            ps.setInt(2, week);
+            ps.setString(3, day);
+            ps.setString(4, startTime);
+
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Timeslot removed successfully.");
+            } else {
+                System.err.println("Failed to remove timeslot.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Exception: removing timeslot from the database");
+            e.printStackTrace();
+        }
+    }
 
     public boolean clashCheck(int week, String day, String lecturerName, String newStartTime, String newEndTime, String moduleName, String courseName, String roomName) throws SQLException {
         try (Connection conn = databaseManager.getConnection();
@@ -89,6 +109,18 @@ public class DAO {
             InputProcessing input = new InputProcessing();
             // Execute the query
             try (ResultSet rs = pstmt.executeQuery();) {
+
+                // Check if the timeslot already exists for the provided course
+                while (rs.next()) {
+                    if (rs.getString("course_name").equals(courseName) &&
+                            day.equals(rs.getString("day")) &&
+                            newStartTime.equals(rs.getString("start_time")) &&
+                            newEndTime.equals(rs.getString("end_time"))) {
+                        // Timeslot already exists for this course
+                        input.processUserInput("Timeslot already exists for this course.\nPress any character and enter to proceed.", false);
+                        return true;
+                    }
+                }
 
                 // Fetch courses associated with the given module
                 Set<String> coursesForModule = new HashSet<>();
@@ -102,6 +134,9 @@ public class DAO {
                     }
                 }
 
+                // Check if the module is shared by the provided course
+                boolean moduleShared = coursesForModule.contains(courseName);
+
                 // Iterate over the existing timeslots
                 while (rs.next()) {
                     String startTime = rs.getString("start_time");
@@ -112,42 +147,27 @@ public class DAO {
                     String existingRoomName = rs.getString("room");
 
                     // Check if the module is shared by the provided course
-                    if (moduleName.equals(existingModuleName) && coursesForModule.contains(existingCourseName)) {
+                    if (moduleShared && existingModuleName.equals(moduleName)) {
                         // No clash detection needed if the module is shared by the provided course
                         return false;
                     }
 
                     // Check if the lecturer is busy at the specified time
-                    if (lecturerName.equals(existingLecturerName)) {
-                        // Check if the timeslot overlaps with the existing timeslot for the same lecturer
-                        if (day.equals(rs.getString("day")) &&
-                                newStartTime.compareTo(endTime) < 0 && newEndTime.compareTo(startTime) > 0) {
-                            // Clash detected
-                            input.processUserInput("Clash detected! Lecturer is busy at that time.\nPress any character and enter to proceed.", false);
-                            return true;
-                        }
+                    if (lecturerName.equals(existingLecturerName) &&
+                            day.equals(rs.getString("day")) &&
+                            newStartTime.compareTo(endTime) < 0 && newEndTime.compareTo(startTime) > 0) {
+                        // Clash detected
+                        input.processUserInput("Clash detected! Lecturer is busy at that time.\nPress any character and enter to proceed.", false);
+                        return true;
                     }
 
                     // Check if the room is busy at the specified time
-                    if (roomName.equals(existingRoomName)) {
-                        // Check if the timeslot overlaps with the existing timeslot for the same room
-                        if (day.equals(rs.getString("day")) &&
-                                newStartTime.compareTo(endTime) < 0 && newEndTime.compareTo(startTime) > 0) {
-                            // Clash detected
-                            input.processUserInput("Clash detected! Room is busy at that time.\nPress any character and enter to proceed.", false);
-                            return true;
-                        }
-                    }
-
-                    // Check for clashes only if the timeslot is for the same course
-                    if (existingCourseName.equals(courseName)) {
-                        // Check if the timeslot overlaps with the existing timeslot for the same course and day
-                        if (day.equals(rs.getString("day")) &&
-                                newStartTime.compareTo(endTime) < 0 && newEndTime.compareTo(startTime) > 0) {
-                            // Clash detected
-                            input.processUserInput("Clash detected! Cannot create the new timeslot.\nPress any character and enter to proceed.", false);
-                            return true;
-                        }
+                    if (roomName.equals(existingRoomName) &&
+                            day.equals(rs.getString("day")) &&
+                            newStartTime.compareTo(endTime) < 0 && newEndTime.compareTo(startTime) > 0) {
+                        // Clash detected
+                        input.processUserInput("Clash detected! Room is busy at that time.\nPress any character and enter to proceed.", false);
+                        return true;
                     }
                 }
             }
@@ -156,9 +176,6 @@ public class DAO {
         }
         return false; // No clash detected
     }
-
-
-
     public void addCourseToDatabase(String courseName, String courseCode, int courseYear) {
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(INSERT_COURSE_SQL)) {

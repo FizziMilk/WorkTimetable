@@ -116,7 +116,7 @@ public class InputProcessing {
         String startTime = arrayTime[0];
         String endTime = arrayTime[1];
 
-        if(dao.clashCheck(week,day,lecturerName,startTime, endTime,moduleName,courseName,roomName)){
+        if(dao.clashCheck(week,day,lecturerName,startTime, endTime,moduleName,course,roomName)){
             return;
         }
 
@@ -135,6 +135,8 @@ public class InputProcessing {
         dao.addTimeslot(new Timeslot(courseName, courseYear, week, day,
         arrayTime[0], arrayTime[1], roomName, roomInfo[0], lecturerName, moduleName, reference,roomInfo[1]));
     }
+
+
     public void addModuleToCourse(){
         System.out.println("Linking modules to courses, dialog box created.");
         String courseName = dao.retrieveOption("courseName");
