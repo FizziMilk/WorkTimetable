@@ -41,7 +41,7 @@ public class DAO {
     private static final String QUERY_MODULECODE_SQL = "SELECT * FROM modules WHERE module_name = ?";
     private static final String QUERY_TIMESLOTS = "SELECT * FROM timeslots WHERE course_name = ? AND year = ? AND week = ?";
 
-    String TIMESLOT_DAY_WEEK_CHECK = "SELECT * FROM timeslots WHERE Week = ? AND Day = ?";
+    String TIMESLOT_DAY_WEEK_CHECK = "SELECT * FROM timeslots WHERE week = ? AND day = ?";
 
     private final DatabaseManager databaseManager;
 
@@ -53,7 +53,7 @@ public class DAO {
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(INSERT_ITEM_SQL)) {
             //Set parameters for the PreparedStatement
-            ps.setString(1, timeslot.getCourseName()+"_"+timeslot.getYear());
+            ps.setString(1, timeslot.getCourseName());
             ps.setString(2, timeslot.getYear());
             ps.setInt(3, timeslot.getWeek());
             ps.setString(4, timeslot.getDay());
@@ -99,7 +99,7 @@ public class DAO {
         }
     }
 
-    public boolean clashCheck(int week, String day, String lecturerName, String newStartTime, String newEndTime, String moduleName, String courseName, String roomName) throws SQLException {
+    public boolean clashCheck(int week, String day, String lecturerName, String newStartTime, String newEndTime, String moduleName, String courseName, String roomName, String courseYear) throws SQLException {
         try (Connection conn = databaseManager.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(TIMESLOT_DAY_WEEK_CHECK)) {
 
@@ -134,7 +134,7 @@ public class DAO {
                     }
                 }
                 // Check if the module is shared by the provided course
-                boolean moduleShared = coursesForModule.contains(courseName);
+                boolean moduleShared = coursesForModule.contains(courseName + "_" + courseYear);
 
                 // Iterate over the existing timeslots
                 while (rs.next()) {
@@ -415,8 +415,8 @@ public class DAO {
                         resultSet.getString(4), // day
                         LocalTime.parse(resultSet.getString(5)), // start_time
                         LocalTime.parse(resultSet.getString(6)),  // end_time
-                        resultSet.getString(7),
-                        resultSet.getString(10)
+                        resultSet.getString(7),//room
+                        resultSet.getString(10) //module
                     );
 
                     rows.add(row);
